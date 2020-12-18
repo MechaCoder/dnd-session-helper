@@ -62,11 +62,10 @@ def rm(hex):
 def cat(hex):
     # gets all the data
     sData = screenObj.getByHex(hex)
-    sNote = notesObj.readByScreenid(sData.doc_id)
 
     msg = "-play {} \n [dndsh:{}]".format(sData['soundtrack'], hex)
-    print(sData)
     copy(msg)
+    click.secho('tag copyed to clipboard', fg='green')
     return
 
 
@@ -90,7 +89,8 @@ def ls(hexval):
         data = notesObj.readAll()
     else:
         screenData = screenObj.getByHex(hexval)
-        data = notesObj.readByScreenid(screenid=screenData.doc_id)
+        data = notesObj.readByScreenid(screenid=screenData.doc_id, private=False)
+        data += notesObj.readByScreenid(screenid=screenData.doc_id, private=True)
 
     tbl = Table()
     tbl.add_column('text')

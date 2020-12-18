@@ -23,7 +23,7 @@ class NotesData(DatabaseBase):
             'private': private
         })
 
-    def readByScreenid(self, screenid, private:bool == False): 
+    def readByScreenid(self, screenid, private:bool = False): 
         db = self.createObj()
         rows = db.tbl.search(
             (Query().screenid == screenid) & (Query().private == private)
