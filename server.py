@@ -92,4 +92,3 @@ if __name__ == '__main__':
         secho('err: there has been a error | {}'.format(err), fg='red')
         print(type(err))
     
-        
