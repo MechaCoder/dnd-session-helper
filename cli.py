@@ -8,9 +8,7 @@ from rich import print, text
 from pyperclip import copy
 
 screenObj = Screen()
-
 listofhexValues = screenObj.getListOfHexs()
-
 notesObj = Notes()
 
 @click.group()
@@ -59,7 +57,8 @@ def rm(hex):
 
 @screen.command()
 @click.argument('hex', type=click.Choice(choices=listofhexValues, case_sensitive=True))
-def cat(hex):
+def cp(hex):
+    "copys a hex information to the clipboard"
     # gets all the data
     sData = screenObj.getByHex(hex)
 
