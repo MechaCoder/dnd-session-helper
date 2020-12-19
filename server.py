@@ -55,14 +55,19 @@ async def on_message(message):
 
             msg = "**player notes** \n" #player notes
             for note in data:
-                txt = "```\n"
-                txt += note['text']
-                txt += "\n```\n"
-                msg += txt
 
-            await message.channel.send(
-                msg
-            )
+                if note['noteType'] == 'text':
+                    # text note
+                    msg = '``` {} ```'.format(note['text'])
+                    await message.channel.send(
+                        msg
+                    )
+                if note['noteType'] == 'file':
+                    msg = note['text']
+                    await message.channel.send(
+                        file=msg
+                    )
+
 
             data = notesObj.readByScreenid(obj.doc_id, private=True)
             
@@ -70,7 +75,8 @@ async def on_message(message):
             Console().print('DM notes')
             for row in data:
                 Console().print("")
-                Console().print(Markdown(row['text']))
+                if row['noteType'] == 'text':
+                    Console().print(Markdown(row['text']))
 
 
 

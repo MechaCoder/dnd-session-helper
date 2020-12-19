@@ -1,4 +1,4 @@
-from click.termui import prompt
+from click import prompt, Path
 from data import Notes, Screen
 
 import click
@@ -75,11 +75,16 @@ def notes(): pass
 @notes.command()
 @click.argument('screenHex', type=click.Choice(choices=listofhexValues, case_sensitive=True))
 @click.option('--private', type=bool, default=True, prompt=True)
-def mk(screenhex, private):
+@click.option('--noteType', type=click.Choice(choices=['text', 'file']), default='text')
+def mk(screenhex, private, notetype):
     doc = screenObj.getByHex(screenhex)
-    newNote = click.edit('')
 
-    notesObj.create(doc.doc_id, text=newNote, private=private)
+    if notetype == 'file':
+        newNote = prompt('enter path to file', type=Path())
+    if notetype == 'text':
+        newNote = click.edit('')
+
+    notesObj.create(doc.doc_id, text=newNote, private=private, noteType=notetype)
     click.secho('a need note has been added to screen: {}'.format(doc['hex']), fg='green')
 
 @notes.command()
