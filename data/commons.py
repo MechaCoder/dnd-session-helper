@@ -11,6 +11,7 @@ def copylocalImg(src: str):
     
     if isinstance(fileType, str) == False:
        old_fName, fileType = splitext(src)
+       fileType = fileType[1:]
     
     hexVal = time_ns()
 
