@@ -54,15 +54,24 @@ class ScreenData(DatabaseBase):
         if isinstance(title, str) == False:
             raise TypeError('the title needs to be string')
 
+        if title == None:
+            title = ""
+
         row['title'] = title
 
         if isinstance(dm_notes, str) == False:
             raise TypeError('the dm_notes need to be type string')
         
+        if dm_notes == None:
+            dm_notes = ""
+
         row['dm_notes'] = dm_notes
 
         if isinstance(pl_notes, str) == False:
             raise TypeError('the pl_notes need to be type string')
+
+        if pl_notes == None:
+            pl_notes = ""
 
         row['pl_notes'] = pl_notes
 

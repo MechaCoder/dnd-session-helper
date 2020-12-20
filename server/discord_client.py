@@ -35,7 +35,7 @@ class LocalClient(Client):
             if hex not in Screen().getListOfHexs():
                 await message.channel.last_message.add_reaction('\N{THUMBS DOWN SIGN}')
                 return
-
+            Console().clear()
             doc = displayScreen(hex)
 
             if isfile(doc['picture']):

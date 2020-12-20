@@ -18,21 +18,36 @@ def displayScreen(hex):
 
     tWidth, tHight = get_terminal_size()
     
+    # print(doc['pl_notes'])
+
+    pl_string = doc['pl_notes']
+    if pl_string == None:
+        pl_string = ""
+
     pl_notes_panel = Panel(
         title='Players Notes',
-        renderable=doc['pl_notes'],
+        renderable=pl_string,
         style="green"
     )
+
+    dm_string = doc['dm_notes']
+    if dm_string == None:
+        dm_string = ""
+
     dm_notes_panel = Panel(
         title='Dungeon Masters Notes ',
-        renderable=doc['dm_notes'],
+        renderable=dm_string,
         style="red"
     )
 
     tWidth = (tWidth / 2) - 1
+    
 
     cols = Columns(
-        renderables=[pl_notes_panel, dm_notes_panel],
+        renderables=[
+            pl_notes_panel, 
+            dm_notes_panel
+        ],
         width=int(tWidth),
     )
 
@@ -40,10 +55,8 @@ def displayScreen(hex):
         font='computer',
     )
 
-
-
     con.print(Text(
-        title.renderText(doc['title']),
+        doc['title'],
         justify='center'
     ))
 
@@ -51,12 +64,12 @@ def displayScreen(hex):
         title=doc['hex'],
     ))
 
-    e = ':pile_of_poo:'
+    e = ':thumbs_down:'
     if isfile(doc['picture']):
         e = ':thumbs_up:'
 
     con.print(
-        Text('picture - '), doc['picture'], e
+        'picture - ', doc['picture'], e
     )
 
     con.print(
