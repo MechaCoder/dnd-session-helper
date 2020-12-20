@@ -1,4 +1,5 @@
 from os import get_terminal_size
+from os.path import isfile
 
 from rich import align, columns
 from rich.panel import Panel
@@ -50,8 +51,12 @@ def displayScreen(hex):
         title=doc['hex'],
     ))
 
+    e = ':pile_of_poo:'
+    if isfile(doc['picture']):
+        e = ':thumbs_up:'
+
     con.print(
-        Text('picture - '), doc['picture']
+        Text('picture - '), doc['picture'], e
     )
 
     con.print(
@@ -60,6 +65,6 @@ def displayScreen(hex):
 
     Console().print(cols)
 
-    return True
+    return doc
 
     
