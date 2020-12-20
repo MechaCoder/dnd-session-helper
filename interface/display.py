@@ -14,6 +14,7 @@ from data import Screen
 def displayScreen(hex):
     con = Console()
     doc = Screen().getByHex(hex)
+
     tWidth, tHight = get_terminal_size()
     
     pl_notes_panel = Panel(
@@ -38,6 +39,8 @@ def displayScreen(hex):
         font='computer',
     )
 
+
+
     con.print(Text(
         title.renderText(doc['title']),
         justify='center'
@@ -46,6 +49,14 @@ def displayScreen(hex):
     con.print(Rule(
         title=doc['hex'],
     ))
+
+    con.print(
+        Text('picture - '), doc['picture']
+    )
+
+    con.print(
+        'soundtrack - ', doc['soundtrack']
+    )
 
     Console().print(cols)
 

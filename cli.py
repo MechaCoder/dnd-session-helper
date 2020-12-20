@@ -7,6 +7,7 @@ from rich.console import Console
 from rich import print, text
 
 from interface.tables import listScreens
+from interface.display import displayScreen
 
 screenObj = Screen()
 listofhexValues = screenObj.getListOfHexs()
@@ -28,7 +29,7 @@ def screen():
 def mk(title, pic, soundtrack, dm_notes, pl_notes):
     """ added a new screen. """
     newScreen = screenObj.create(soundtrack=soundtrack, picture=pic, title=title, dm_notes=dm_notes, pl_notes=pl_notes)
-    click.secho('a new screen has been created, {}'.format(newScreen[1]), fg='green')
+    click.secho('a new screen have been created, {}'.format(newScreen[1]), fg='green')
 
 @screen.command()
 def ls():
@@ -38,10 +39,57 @@ def ls():
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cat(hex):
-    doc = screenObj.getByHex(hex)
-    
-    
+    displayScreen(hex)
 
+@screen.group()
+def update(): pass
+
+@update.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.argument('title', type=str)
+def title(hex, title):
+    screenObj.update_title(hex=hex, title=title)
+    click.secho('title have been updated', fg='green')
+
+@update.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.argument('soundtrack', type=str)
+def soundtrack(hex, soundtrack): 
+    screenObj.update_soundtrack(hex=hex, soundtrack=soundtrack)
+    click.secho('soundtrack have been updated', fg='green')
+
+@update.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.argument('picture', type=click.Path(exists=True, file_okay=True))
+def picture(hex, picture): 
+    screenObj.update_picture(hex=hex, picture=picture)
+    click.secho('picture have been updated', fg='green')
+    pass
+
+@update.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.argument('ntype', type=click.Choice(['dm', 'pl']), default='dm')
+def notes(hex, ntype):
+    
+    doc = screenObj.getByHex(hex)
+
+    if ntype == 'dm':
+        note = click.edit(doc['dm_notes'])
+        screenObj.update_dm_notes(hex=hex, note=note)
+        click.secho('dm notes have been updated', fg='green')
+        return 
+    if ntype == 'pl':
+        note = click.edit(doc['pl_notes'])
+        screenObj.update_pl_notes(hex=hex, note=note)
+        click.secho('pl notes have been updated', fg='green')
+        return
+
+@screen.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+def rm(hex):
+    if click.confirm('are you sure you to delete {}?'.format(hex)) == False:
+        return
+    screenObj.removeByHex(hex)
 
 
 if __name__ == '__main__':

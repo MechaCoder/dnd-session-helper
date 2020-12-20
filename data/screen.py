@@ -81,6 +81,12 @@ class ScreenData(DatabaseBase):
             rows.append(row['hex'])
         return rows
 
+    def update(self, hex:str, tag:str, value:any):
+        db = self.createObj()
+        updated_ids = db.tbl.update({tag: value}, Query().hex == hex)
+        db.close()
+        return updated_ids
+
     def removeByHex(self, hex:str):
         db = self.createObj()
         if db.tbl.contains(Query().hex == hex) == False:
