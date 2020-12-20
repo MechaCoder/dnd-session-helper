@@ -17,7 +17,7 @@ def _mkHex(l:int=8):
 
 class ScreenData(DatabaseBase):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,soundtrack,picture,title'):
+    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes'):
         super().__init__(file=file, table=table, requiredKeys=requiredKeys)
 
     def _checkHex(self, hex:str):
@@ -27,7 +27,7 @@ class ScreenData(DatabaseBase):
 
         return False
 
-    def create(self, soundtrack:str, picture:str, title:str = 'screen') -> int:
+    def create(self, soundtrack:str, picture:str, title:str = 'screen', dm_notes:str = '', pl_notes:str = '') -> int:
         row = {}
         hexval = _mkHex()
 
@@ -56,6 +56,15 @@ class ScreenData(DatabaseBase):
 
         row['title'] = title
 
+        if isinstance(dm_notes, str) == False:
+            raise TypeError('the dm_notes need to be type string')
+        
+        row['dm_notes'] = dm_notes
+
+        if isinstance(pl_notes, str) == False:
+            raise TypeError('the pl_notes need to be type string')
+
+        row['pl_notes'] = pl_notes
 
         return (super().create(row), row['hex'])
 
