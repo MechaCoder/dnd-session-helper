@@ -3,7 +3,7 @@ from data import Screen
 
 def listScreens():
 
-    tbl = Table
+    tbl = Table()
     tbl.add_column('hex')
     tbl.add_column('title')
     

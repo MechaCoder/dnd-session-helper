@@ -3,9 +3,10 @@ from data import Screen
 
 import click
 from rich.table import Table
+from rich.console import Console
 from rich import print, text
 
-from pyperclip import copy
+from interface.tables import listScreens
 
 screenObj = Screen()
 listofhexValues = screenObj.getListOfHexs()
@@ -31,9 +32,15 @@ def mk(title, pic, soundtrack, dm_notes, pl_notes):
 
 @screen.command()
 def ls():
+    lis = listScreens()
+    Console().print(lis)
+
+@screen.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+def cat(hex):
+    doc = screenObj.getByHex(hex)
     
-
-
+    
 
 
 
