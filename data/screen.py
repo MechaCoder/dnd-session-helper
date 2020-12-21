@@ -1,6 +1,7 @@
-from string import digits, ascii_letters
+from string import digits, ascii_lowercase
 from random import choices
 from os.path import isfile
+from validators import url
 
 from tinydb_base import DatabaseBase
 from tinydb import Query
@@ -11,7 +12,7 @@ from .commons import copylocalImg
 from .exception import DataException
 
 def _mkHex(l:int=8):
-    pool = choices(population=(digits + ascii_letters), k=500)
+    pool = choices(population=(digits + ascii_lowercase), k=500)
     return ''.join(choices(population=pool, k=l))
 
 
@@ -29,11 +30,11 @@ class ScreenData(DatabaseBase):
 
     def create(self, soundtrack:str, picture:str, title:str = 'screen', dm_notes:str = '', pl_notes:str = '') -> int:
         row = {}
-        hexval = _mkHex()
+        hexval = _mkHex(l=4)
 
         #makes a unique hex
         while self._checkHex(hexval) == True:
-            hexval = _mkHex()
+            hexval = _mkHex(l=4)
 
         row['hex'] = hexval
 
@@ -42,12 +43,10 @@ class ScreenData(DatabaseBase):
             raise TypeError('the sound track is not a valid url')
 
         row['soundtrack'] = soundtrack
-        
-        if isfile(picture) == False:
-            raise TypeError('the picture needs to a local image')
 
-        if imghdr.what(picture) == False:
-            raise TypeError('the picture needs to a local image')
+        print(picture)
+        if isfile(picture) == False and url(picture) == False:
+            raise TypeError('the picture needs to a local image or a url')
 
         row['picture'] = copylocalImg(picture)
 

@@ -22,7 +22,7 @@ def screen():
 
 @screen.command()
 @click.argument('title', type=str)
-@click.option('--pic', '-p', type=click.Path(exists=True), prompt=True, help='this is a local img that apt repesents the screen')
+@click.option('--pic', '-p', type=str, prompt=True, help='this is a local img that apt repesents the screen')
 @click.option('--soundtrack', '-s', type=str, prompt=True, help='this is the soundtrack to the sceen')
 @click.option('--dm_notes', '-d', type=str, default='', help='the dm notes as a string')
 @click.option('--pl_notes', '-p', type=str, default='', help='the player notes as a string')
@@ -33,16 +33,20 @@ def mk(title, pic, soundtrack, dm_notes, pl_notes):
 
 @screen.command()
 def ls():
+    """prints out a table of all screens in the system"""
     lis = listScreens()
     Console().print(lis)
 
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cat(hex):
+    """ displays a screen """
     displayScreen(hex)
 
 @screen.group()
-def update(): pass
+def update():
+    """ update screen values """
+    pass
 
 @update.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
