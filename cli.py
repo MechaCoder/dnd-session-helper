@@ -6,6 +6,8 @@ from rich.table import Table
 from rich.console import Console
 from rich import print, text
 
+from pyperclip import copy
+
 from interface.tables import listScreens
 from interface.display import displayScreen
 
@@ -42,6 +44,17 @@ def ls():
 def cat(hex):
     """ displays a screen """
     displayScreen(hex)
+
+@screen.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+def cp(hex):
+    doc = screenObj.getByHex(hex)
+    msg = "-play {} \n [dndsh:{}]".format(
+        doc['soundtrack'],
+        hex
+    )
+    copy(msg)
+
 
 @screen.group()
 def update():
