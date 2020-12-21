@@ -40,10 +40,13 @@ class LocalClient(Client):
 
             if isfile(doc['picture']):
                 await message.channel.send(
-                    file=doc['picture']
+                    file=discord.File(doc['picture']) 
                 )
 
             for paragraph in doc['pl_notes'].split('\n'):
+
+                if paragraph == '':
+                    continue
 
                 await message.channel.send(
                     paragraph
