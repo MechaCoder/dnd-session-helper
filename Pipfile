@@ -12,6 +12,8 @@ validators = "*"
 click = "*"
 rich = "*"
 pyperclip = "*"
+pyfiglet = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
