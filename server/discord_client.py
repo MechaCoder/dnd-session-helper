@@ -8,6 +8,7 @@ from rich.markdown import Markdown
 
 from data import Screen
 from interface.display import displayScreen
+from data.dice import roller
 
 
 class LocalClient(Client):
@@ -20,9 +21,16 @@ class LocalClient(Client):
         if message.author == self.user:
             return
 
-        if '[dndsh' not in message.content:
+        if '[dndsh' in message.content:
+            await self._message_content_tags(message)
             return
 
+        if '(roll:' in message.content:
+            await self._dice_roller(message)
+            return
+
+    async def _message_content_tags(self, message):
+        
         async with message.channel.typing():
 
             tags = re.findall(
@@ -35,6 +43,7 @@ class LocalClient(Client):
             if hex not in Screen().getListOfHexs():
                 await message.channel.last_message.add_reaction('\N{THUMBS DOWN SIGN}')
                 return
+
             Console().clear()
             doc = displayScreen(hex)
 
@@ -51,5 +60,28 @@ class LocalClient(Client):
                 await message.channel.send(
                     paragraph
                 )
+            
+            return True
 
-        pass
+    async def _dice_roller(self, message):
+
+        tags = re.findall(
+            '\((.*?)\)',
+            message.content
+        )
+
+        for tag in tags:
+            tag = tag.split(':')[-1]
+            obj = roller(tag)
+
+            msg = "```\n roll total: {} \n roll list:  {} ```".format(
+                obj['sum'],
+                obj['rolls']
+            )
+
+            await message.channel.send(
+                msg
+            )
+
+        return 
+

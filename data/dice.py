@@ -19,8 +19,6 @@ def roller(slug:str = '1D6'):
         raise TypeError('slug needs to be a string')
 
     slug = slug.lower().split('d')
-    print(slug)
-    # return ""
 
     if len(slug) != 2:
         raise SlugFormat('slug format error')
@@ -50,9 +48,6 @@ def roller(slug:str = '1D6'):
         'sum': total,
         'rolls': rollString
     }
-
-
-
 
 
 class DiceHistory(DatabaseBase):
