@@ -2,18 +2,22 @@ import re
 from os.path import isfile
 from discord import Client, File
 import discord
+from discord.gateway import DiscordClientWebSocketResponse
 from rich import print
+from rich import table
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.table import Table
 
 from data import Screen
 from interface.display import displayScreen
-from data.dice import roller
+from data.dice import roller, DiceHistory
 
 
 class LocalClient(Client):
 
     async def on_ready(self):
+        DiceHistory().clear()
         print('Logged on:', self.user)
 
     async def on_message(self, message):
@@ -70,18 +74,40 @@ class LocalClient(Client):
             message.content
         )
 
-        for tag in tags:
-            tag = tag.split(':')[-1]
-            obj = roller(tag)
+        async with message.channel.typing():
 
-            msg = "```\n roll total: {} \n roll list:  {} ```".format(
-                obj['sum'],
-                obj['rolls']
-            )
+            for tag in tags:
+                tag = tag.split(':')[-1]
 
-            await message.channel.send(
-                msg
-            )
+                if tag == 'history':
+                    
+                    msg = "dice roll history \n ```"
+                    for row in DiceHistory().readAll():
+                        # print(row)
+                        msg += 'at {}, a user requested {} and got {} \n'.format(
+                            str(row['ts']),
+                            row['slug'],
+                            row['result']
+                        )
+                    msg += '\n```'
+                    
+                    await message.channel.send(
+                        msg
+                    )
+                    return
+
+                else:
+
+                    obj = roller(tag)
+
+                    msg = "```\n roll total: {} \n roll list:  {} ```".format(
+                        obj['sum'],
+                        obj['rolls']
+                    )
+
+                    await message.channel.send(
+                        msg
+                    )
 
         return 
 

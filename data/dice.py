@@ -18,14 +18,14 @@ def roller(slug:str = '1D6'):
     if isinstance(slug, str) == False:
         raise TypeError('slug needs to be a string')
 
-    slug = slug.lower().split('d')
+    sluglist = slug.lower().split('d')
 
-    if len(slug) != 2:
+    if len(sluglist) != 2:
         raise SlugFormat('slug format error')
 
     try:
-        amount = int(slug[0])
-        dieType = int(slug[1])
+        amount = int(sluglist[0])
+        dieType = int(sluglist[1])
     except Exception:
         raise SlugFormat
 
@@ -63,3 +63,13 @@ class DiceHistory(DatabaseBase):
             'ts': ts
         }
         return super().create(row)
+
+    def readAll(self) -> list:
+        
+        formatTs = lambda ts: datetime.fromtimestamp(ts)
+        
+        data = super().readAll()
+        for row in data:
+            row['ts'] = formatTs(row['ts'])
+        
+        return data
