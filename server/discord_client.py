@@ -44,6 +44,10 @@ class LocalClient(Client):
 
             hex = tags[0].split(':')[-1]
 
+            if hex.lower() == 'ping':
+                await message.channel.send('I am ready to play')
+                return True
+
             if hex not in Screen().getListOfHexs():
                 await message.channel.last_message.add_reaction('\N{THUMBS DOWN SIGN}')
                 return

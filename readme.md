@@ -17,6 +17,7 @@ to interact with the data modual you will need to use, `cli.py`, the commands ar
 
 TODO:
 
++ ping system - a quick method to see if server is responseive
 + work on makeing a sound player intergration
 + create an npc system
 + dice roll [1]
