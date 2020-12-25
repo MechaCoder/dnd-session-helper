@@ -4,6 +4,9 @@ class SettingsData(GetSet):
     
     def __init__(self, file: str = 'ds.json', table: str = 'settings'):
         super().__init__(file=file, table=table)
+        # self.defaultRows({
+        #     'Active Campain', 1
+        # })
 
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)

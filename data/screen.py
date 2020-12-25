@@ -10,6 +10,7 @@ import imghdr
 
 from .commons import copylocalImg
 from .exception import DataException
+from .settings import SettingsData
 
 def _mkHex(l:int=8):
     pool = choices(population=(digits + ascii_lowercase), k=500)
@@ -18,8 +19,9 @@ def _mkHex(l:int=8):
 
 class ScreenData(DatabaseBase):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes'):
+    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain'):
         super().__init__(file=file, table=table, requiredKeys=requiredKeys)
+        self.settings = SettingsData()
 
     def _checkHex(self, hex:str):
         db = self.createObj()
@@ -28,7 +30,7 @@ class ScreenData(DatabaseBase):
 
         return False
 
-    def create(self, soundtrack:str, picture:str, title:str = 'screen', dm_notes:str = '', pl_notes:str = '') -> int:
+    def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = '') -> int:
         row = {}
         hexval = _mkHex(l=4)
 
@@ -44,11 +46,18 @@ class ScreenData(DatabaseBase):
 
         row['soundtrack'] = soundtrack
 
-        print(picture)
         if isfile(picture) == False and url(picture) == False:
             raise TypeError('the picture needs to a local image or a url')
 
         row['picture'] = copylocalImg(picture)
+
+        if isinstance(campain, int) == False:
+            raise TypeError('the campain needs to a int')
+        
+        if campain == 0:
+            campain = self.settings.get('Active Campain')
+
+        row['campain'] = campain
 
         if isinstance(title, str) == False:
             raise TypeError('the title needs to be string')

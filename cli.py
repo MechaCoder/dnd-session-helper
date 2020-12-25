@@ -1,5 +1,7 @@
+from random import choice
+from data.campain import CampainData
 from click import prompt, Path
-from data import Screen
+from data import Screen, Campain, Settings
 
 import click
 from rich.table import Table
@@ -108,6 +110,36 @@ def rm(hex):
     if click.confirm('are you sure you to delete {}?'.format(hex)) == False:
         return
     screenObj.removeByHex(hex)
+
+@cli.group()
+def campain(): pass
+
+@campain.command()
+@click.argument('title', type=str)
+@click.option('--bio', type=str, default='')
+def mk(title, bio):
+    Campain().create(
+        title=title,
+        bio=bio
+    )
+
+@campain.command()
+def ls():
+    tbl = Table()
+    tbl.add_column('id')
+    tbl.add_column('title')
+    tbl.add_column('bio')
+    
+    for row in Campain().readAll():
+        tbl.add_row(row.doc_id, row['title'], row['bio'])
+
+    Console().print(tbl)
+
+@campain.command()
+@click.argument('campain_id', type=click.Choice(Campain().listDoc_ids()))
+def active(campain_id):
+    Settings().set(campain_id)
+    click.secho('campain {} has be set as active'.format(campain_id))
 
 
 if __name__ == '__main__':
