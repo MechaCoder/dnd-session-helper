@@ -5,6 +5,9 @@ class SettingsData(GetSet):
     def __init__(self, file: str = 'ds.json', table: str = 'settings'):
         super().__init__(file=file, table=table)
 
+        if self.exist('Active Campain') == False:
+            self.set('Active Campain', 1)
+
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)
         exists = db.tbl.contains(Query().tag == tag)

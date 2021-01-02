@@ -1,5 +1,7 @@
+from random import choice
+from data.campain import CampainData
 from click import prompt, Path
-from data import Screen
+from data import Screen, Campain, Settings
 
 import click
 from rich.table import Table
@@ -12,6 +14,7 @@ from interface.tables import listScreens
 from interface.display import displayScreen
 
 screenObj = Screen()
+campainObj = Campain()
 listofhexValues = screenObj.getListOfHexs()
 
 @click.group()
@@ -26,11 +29,18 @@ def screen():
 @click.argument('title', type=str)
 @click.option('--pic', '-p', type=str, prompt=True, help='this is a local img that apt repesents the screen')
 @click.option('--soundtrack', '-s', type=str, prompt=True, help='this is the soundtrack to the sceen')
-@click.option('--dm_notes', '-d', type=str, default='', help='the dm notes as a string')
-@click.option('--pl_notes', '-p', type=str, default='', help='the player notes as a string')
+@click.option('--dm_notes', type=str, default='', help='the dm notes as a string')
+@click.option('--pl_notes', type=str, default='', help='the player notes as a string')
+# @click.option('--campain',  type=click.Choice(campainidList), default=0)
 def mk(title, pic, soundtrack, dm_notes, pl_notes):
     """ added a new screen. """
-    newScreen = screenObj.create(soundtrack=soundtrack, picture=pic, title=title, dm_notes=dm_notes, pl_notes=pl_notes)
+    newScreen = screenObj.create(
+        soundtrack=soundtrack, 
+        picture=pic, 
+        title=title, 
+        dm_notes=dm_notes, 
+        pl_notes=pl_notes
+    )
     click.secho('a new screen have been created, {}'.format(newScreen[1]), fg='green')
 
 @screen.command()
@@ -108,6 +118,39 @@ def rm(hex):
     if click.confirm('are you sure you to delete {}?'.format(hex)) == False:
         return
     screenObj.removeByHex(hex)
+
+@cli.group()
+def campaign(): pass
+
+@campaign.command()
+@click.argument('title', type=str)
+@click.option('--bio', type=str, default='')
+def mk(title, bio):
+    Campain().create(
+        title=title,
+        bio=bio
+    )
+
+@campaign.command()
+def ls():
+    tbl = Table()
+    tbl.add_column('id')
+    tbl.add_column('title')
+    tbl.add_column('bio')
+    
+    for row in Campain().readAll():
+        tbl.add_row(str(row.doc_id), row['title'], row['bio'])
+
+    Console().print(tbl)
+
+campainidList = campainObj.listDoc_ids()
+campainidList.append('0')
+
+@campaign.command()
+@click.argument('campain_id', type=click.Choice(campainidList))
+def active(campain_id):
+    Settings().set('Active Campain', campain_id)
+    click.secho('campain {} has be set as active'.format(campain_id), fg='green')
 
 
 if __name__ == '__main__':

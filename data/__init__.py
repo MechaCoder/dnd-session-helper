@@ -1,5 +1,8 @@
+from tinydb.queries import Query
 from .screen import ScreenData
 from .settings import SettingsData
+from .campain import CampainData
+
 
 class Screen(ScreenData):
 
@@ -42,6 +45,25 @@ class Screen(ScreenData):
             tag='pl_notes',
             value=note
         )
-    
 
+    def readAll(self) -> list:
+        setting = SettingsData().get('Active Campain')
+        db = self.createObj()
+        data = db.tbl.search(Query().campain == setting)
+        db.close()
+
+        return data
+
+    
 class Settings(SettingsData): pass 
+
+class Campain(CampainData):
+
+    def listDoc_ids(self):
+
+        ids = []
+        for row in self.readAll():
+            ids.append(
+                str(row.doc_id)
+            )
+        return ids
