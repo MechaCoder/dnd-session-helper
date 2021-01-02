@@ -14,6 +14,7 @@ from interface.tables import listScreens
 from interface.display import displayScreen
 
 screenObj = Screen()
+campainObj = Campain()
 listofhexValues = screenObj.getListOfHexs()
 
 @click.group()
@@ -28,11 +29,18 @@ def screen():
 @click.argument('title', type=str)
 @click.option('--pic', '-p', type=str, prompt=True, help='this is a local img that apt repesents the screen')
 @click.option('--soundtrack', '-s', type=str, prompt=True, help='this is the soundtrack to the sceen')
-@click.option('--dm_notes', '-d', type=str, default='', help='the dm notes as a string')
-@click.option('--pl_notes', '-p', type=str, default='', help='the player notes as a string')
+@click.option('--dm_notes', type=str, default='', help='the dm notes as a string')
+@click.option('--pl_notes', type=str, default='', help='the player notes as a string')
+# @click.option('--campain',  type=click.Choice(campainidList), default=0)
 def mk(title, pic, soundtrack, dm_notes, pl_notes):
     """ added a new screen. """
-    newScreen = screenObj.create(soundtrack=soundtrack, picture=pic, title=title, dm_notes=dm_notes, pl_notes=pl_notes)
+    newScreen = screenObj.create(
+        soundtrack=soundtrack, 
+        picture=pic, 
+        title=title, 
+        dm_notes=dm_notes, 
+        pl_notes=pl_notes
+    )
     click.secho('a new screen have been created, {}'.format(newScreen[1]), fg='green')
 
 @screen.command()
@@ -112,9 +120,9 @@ def rm(hex):
     screenObj.removeByHex(hex)
 
 @cli.group()
-def campain(): pass
+def campaign(): pass
 
-@campain.command()
+@campaign.command()
 @click.argument('title', type=str)
 @click.option('--bio', type=str, default='')
 def mk(title, bio):
@@ -123,7 +131,7 @@ def mk(title, bio):
         bio=bio
     )
 
-@campain.command()
+@campaign.command()
 def ls():
     tbl = Table()
     tbl.add_column('id')
@@ -131,15 +139,18 @@ def ls():
     tbl.add_column('bio')
     
     for row in Campain().readAll():
-        tbl.add_row(row.doc_id, row['title'], row['bio'])
+        tbl.add_row(str(row.doc_id), row['title'], row['bio'])
 
     Console().print(tbl)
 
-@campain.command()
-@click.argument('campain_id', type=click.Choice(Campain().listDoc_ids()))
+campainidList = campainObj.listDoc_ids()
+campainidList.append('0')
+
+@campaign.command()
+@click.argument('campain_id', type=click.Choice(campainidList))
 def active(campain_id):
-    Settings().set(campain_id)
-    click.secho('campain {} has be set as active'.format(campain_id))
+    Settings().set('Active Campain', campain_id)
+    click.secho('campain {} has be set as active'.format(campain_id), fg='green')
 
 
 if __name__ == '__main__':
