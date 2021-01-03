@@ -1,7 +1,7 @@
 from random import choice
 from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings
+from data import Screen, Campain, Settings, Combat
 
 import click
 from rich.table import Table
@@ -151,6 +151,33 @@ campainidList.append('0')
 def active(campain_id):
     Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
+
+@cli.group()
+def combat(): pass
+
+@combat.command()
+@click.argument('name', type=str)
+@click.argument('url', type=str)
+def mk(name, url):
+    Combat().create(name=name, url=url)
+    click.secho('a new encounter has been created', fg='green')
+
+@combat.command()
+def ls():
+    tbl = Table()
+    tbl.add_column('doc id')
+    tbl.add_column('name')
+    tbl.add_column('url')
+    
+    for row in Combat().readAll():
+        tbl.add_row(str(row.doc_id) , row['name'], row['addr'])
+    Console().print(tbl)
+
+@combat.command()
+@click.argument('combat_id', type=click.Choice(Combat().readDoc_ids()))
+def rm(combat_id):
+    Combat().removeById(combat_id)
+    click.secho('combat deleted.', fg='red')
 
 
 if __name__ == '__main__':
