@@ -173,6 +173,12 @@ def ls():
         tbl.add_row(str(row.doc_id) , row['name'], row['addr'])
     Console().print(tbl)
 
+@combat.command()
+@click.argument('combat_id', type=click.Choice(Combat().readDoc_ids()))
+def rm(combat_id):
+    Combat().removeById(combat_id)
+    click.secho('combat deleted.', fg='red')
+
 
 if __name__ == '__main__':
     cli()

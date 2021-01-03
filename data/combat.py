@@ -1,6 +1,6 @@
-from tinydb_base import DatabaseBase
+from .base import BaseData
 
-class EncounterData(DatabaseBase): 
+class EncounterData(BaseData): 
     
     def __init__(self, file: str = 'ds.json', table: str = 'encounter', requiredKeys='name,url,campaign'):
         super().__init__(file=file, table=table, requiredKeys=requiredKeys)
