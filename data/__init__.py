@@ -2,6 +2,9 @@ from tinydb.queries import Query
 from .screen import ScreenData
 from .settings import SettingsData
 from .campain import CampainData
+from .combat import EncounterData
+
+import validators
 
 
 class Screen(ScreenData):
@@ -67,3 +70,13 @@ class Campain(CampainData):
                 str(row.doc_id)
             )
         return ids
+
+class Combat(EncounterData): 
+
+    def create(self, name: str, url: str) -> int:
+
+        if validators.url(url) == False:
+            raise TypeError('url is not vaild url')
+
+        campaign_id = Settings().get('Active Campain')
+        return super().create(name, url, campaign_id)

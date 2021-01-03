@@ -1,4 +1,3 @@
-from typing import Type
 from tinydb_base import DatabaseBase
 
 class CampainData(DatabaseBase):
