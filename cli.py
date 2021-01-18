@@ -102,13 +102,15 @@ def notes(hex, ntype):
 
     if ntype == 'dm':
         dm_note = click.edit(doc['dm_notes'])
-        screenObj.update_dm_notes(hex=hex, note=dm_note)
+        if isinstance(dm_note, str):
+            screenObj.update_dm_notes(hex=hex, note=dm_note)
         click.secho('dm notes have been updated', fg='green')
         return 
 
     if ntype == 'pl':
         pl_note = click.edit(doc['pl_notes'])
-        screenObj.update_pl_notes(hex=hex, note=pl_note)
+        if isinstance(pl_note, str):
+            screenObj.update_pl_notes(hex=hex, note=pl_note)
         click.secho('pl notes have been updated', fg='green')
         return
 

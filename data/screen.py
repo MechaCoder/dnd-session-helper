@@ -99,6 +99,10 @@ class ScreenData(DatabaseBase):
         return rows
 
     def update(self, hex:str, tag:str, value:any):
+
+        if isinstance(value, str):
+            return
+
         db = self.createObj()
         updated_ids = db.tbl.update({tag: value}, Query().hex == hex)
         db.close()
