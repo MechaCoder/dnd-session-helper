@@ -1,7 +1,9 @@
 from random import choice
+from datetime import date, datetime
+
 from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings, Combat
+from data import Screen, Campain, Settings, Combat, History
 
 import click
 from rich.table import Table
@@ -180,6 +182,43 @@ def ls():
 def rm(combat_id):
     Combat().removeById(combat_id)
     click.secho('combat deleted.', fg='red')
+
+@cli.group()
+def chat():
+    """ this is a interaction """
+    pass
+
+@chat.command()
+def read():
+    hist = History()
+
+    tbl = Table()
+    tbl.add_column('doc_id')
+    tbl.add_column('sender')
+    tbl.add_column('guildname')
+    tbl.add_column('channel')
+    tbl.add_column('ts')
+    tbl.add_column('message')
+
+    for row in hist.readAll():
+        ts = row['ts']
+        ts = datetime.fromtimestamp(ts).strftime('%H:%M %d/%m/%y')
+
+        tbl.add_row(
+            str(row.doc_id),
+            row['sender'],
+            row['guildname'],
+            row['channel'],
+            str(ts),
+            row['msg']
+        )
+    Console().print(tbl)
+
+@chat.command()
+def clear():
+    History().clear()
+    click.secho('chat history has been cleared')
+
 
 
 if __name__ == '__main__':

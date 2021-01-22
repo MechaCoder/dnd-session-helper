@@ -1,5 +1,6 @@
 import re
 from os.path import isfile
+from click.decorators import group
 from discord import Client, File
 import discord
 from discord.gateway import DiscordClientWebSocketResponse
@@ -9,10 +10,11 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.table import Table
 
-from data import Screen
+from data import Screen, History
 from interface.display import displayScreen
 from data.dice import roller, DiceHistory
 
+history = History()
 
 class LocalClient(Client):
 
@@ -21,6 +23,15 @@ class LocalClient(Client):
         print('Logged on:', self.user)
 
     async def on_message(self, message):
+
+        # print(message)
+
+        history.create(
+            msg=message.content,
+            sender=message.author.name,
+            server=message.guild.name,
+            channel=message.channel.name
+        )
         
         if message.author == self.user:
             return

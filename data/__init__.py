@@ -3,6 +3,7 @@ from .screen import ScreenData
 from .settings import SettingsData
 from .campain import CampainData
 from .combat import EncounterData
+from .history import History
 
 import validators
 
