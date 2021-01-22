@@ -100,7 +100,7 @@ class ScreenData(DatabaseBase):
 
     def update(self, hex:str, tag:str, value:any):
 
-        if isinstance(value, str):
+        if isinstance(value, str) == False:
             return
 
         db = self.createObj()

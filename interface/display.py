@@ -7,6 +7,7 @@ from rich.columns import Columns
 from rich.text import Text
 from rich.rule import Rule
 from rich.console import Console
+from rich.markdown import Markdown
 
 from pyfiglet import Figlet
 
@@ -17,12 +18,12 @@ def displayScreen(hex):
     doc = Screen().getByHex(hex)
 
     tWidth, tHight = get_terminal_size()
-    
-    # print(doc['pl_notes'])
 
     pl_string = doc['pl_notes']
     if pl_string == None:
         pl_string = ""
+
+    pl_string = Markdown(pl_string)
 
     pl_notes_panel = Panel(
         title='Players Notes',
@@ -33,6 +34,8 @@ def displayScreen(hex):
     dm_string = doc['dm_notes']
     if dm_string == None:
         dm_string = ""
+
+    dm_string = Markdown(dm_string)
 
     dm_notes_panel = Panel(
         title='Dungeon Masters Notes ',
