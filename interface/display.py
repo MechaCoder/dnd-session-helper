@@ -11,11 +11,15 @@ from rich.markdown import Markdown
 
 from pyfiglet import Figlet
 
-from data import Screen
+from data import Screen, Settings
 
 def displayScreen(hex):
-    con = Console()
     doc = Screen().getByHex(hex)
+
+    if Settings().get('displayServerSide') == False:
+        return doc
+    
+    con = Console()
 
     tWidth, tHight = get_terminal_size()
 

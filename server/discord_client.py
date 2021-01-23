@@ -10,11 +10,12 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.table import Table
 
-from data import Screen, History
+from data import Screen, History, Settings, settings
 from interface.display import displayScreen
 from data.dice import roller, DiceHistory
 
 history = History()
+settingsObj = Settings()
 
 class LocalClient(Client):
 
@@ -24,14 +25,13 @@ class LocalClient(Client):
 
     async def on_message(self, message):
 
-        # print(message)
-
-        history.create(
-            msg=message.content,
-            sender=message.author.name,
-            server=message.guild.name,
-            channel=message.channel.name
-        )
+        if settingsObj.get('chat History'):
+            history.create(
+                msg=message.content,
+                sender=message.author.name,
+                server=message.guild.name,
+                channel=message.channel.name
+            )
         
         if message.author == self.user:
             return
@@ -63,6 +63,7 @@ class LocalClient(Client):
                 await message.channel.last_message.add_reaction('\N{THUMBS DOWN SIGN}')
                 return
 
+            
             Console().clear()
             doc = displayScreen(hex)
 

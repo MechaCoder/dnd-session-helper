@@ -8,6 +8,13 @@ class SettingsData(GetSet):
         if self.exist('Active Campain') == False:
             self.set('Active Campain', 1)
 
+        if self.exist('chatH istory') == False:
+            self.set('chatHistory', False)
+
+        if self.exist('displayServerSide'):
+            self.set('displayServerSide', False)
+
+
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)
         exists = db.tbl.contains(Query().tag == tag)
