@@ -219,7 +219,23 @@ def clear():
     History().clear()
     click.secho('chat history has been cleared')
 
+@cli.group()
+def settings(): pass
 
+
+@settings.command()
+def get():
+    """ shows a table of all setings that exist """
+    tbl = Table()
+    tbl.add_column('tag')
+    tbl.add_column('value')
+    
+    for row in Settings().getAll():
+        tbl.add_row(
+            row['tag'], 
+            str(row['val']).strip()
+        )
+    Console().print(tbl)
 
 if __name__ == '__main__':
     cli()

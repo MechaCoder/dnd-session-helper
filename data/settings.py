@@ -27,3 +27,21 @@ class SettingsData(GetSet):
         db.tbl.remove(Query().tag == tag)
         db.close()
         return True
+
+    def readTags(self):
+        db = Factory(self.fileName, self.tableName)
+        
+        tags = []
+        for row in db.tbl.all():
+            tags.append(
+                row['tag']
+            )
+        db.close()
+        return tags
+
+    def getAll(self):
+        db = Factory(self.fileName, self.tableName)
+        rows = db.tbl.all()
+        db.close()
+
+        return rows
