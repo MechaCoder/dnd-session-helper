@@ -9,7 +9,6 @@ import click
 from rich.table import Table
 from rich.console import Console
 from rich import print, text
-
 from pyperclip import copy
 
 from interface.tables import listScreens
@@ -236,6 +235,13 @@ def get():
             str(row['val']).strip()
         )
     Console().print(tbl)
+
+@settings.command()
+@click.argument('tag', type=click.Choice(Settings().readTags()))
+@click.argument('val', type=any)
+def set(tag, val):
+    Settings().set(tag, val)
+
 
 if __name__ == '__main__':
     cli()
