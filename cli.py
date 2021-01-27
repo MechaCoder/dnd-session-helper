@@ -1,5 +1,6 @@
 from random import choice
 from datetime import date, datetime
+from os import remove
 
 from data.campain import CampainData
 from click import prompt, Path
@@ -120,6 +121,8 @@ def notes(hex, ntype):
 def rm(hex):
     if click.confirm('are you sure you to delete {}?'.format(hex)) == False:
         return
+    row = screenObj.getByHex(hex)
+    remove(row['picture'])
     screenObj.removeByHex(hex)
 
 @cli.group()
