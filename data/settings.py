@@ -8,6 +8,13 @@ class SettingsData(GetSet):
         if self.exist('Active Campain') == False:
             self.set('Active Campain', 1)
 
+        if self.exist('chatH istory') == False:
+            self.set('chatHistory', False)
+
+        if self.exist('displayServerSide'):
+            self.set('displayServerSide', False)
+
+
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)
         exists = db.tbl.contains(Query().tag == tag)
@@ -20,3 +27,21 @@ class SettingsData(GetSet):
         db.tbl.remove(Query().tag == tag)
         db.close()
         return True
+
+    def readTags(self):
+        db = Factory(self.fileName, self.tableName)
+        
+        tags = []
+        for row in db.tbl.all():
+            tags.append(
+                row['tag']
+            )
+        db.close()
+        return tags
+
+    def getAll(self):
+        db = Factory(self.fileName, self.tableName)
+        rows = db.tbl.all()
+        db.close()
+
+        return rows

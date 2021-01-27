@@ -9,7 +9,6 @@ import click
 from rich.table import Table
 from rich.console import Console
 from rich import print, text
-
 from pyperclip import copy
 
 from interface.tables import listScreens
@@ -219,6 +218,29 @@ def clear():
     History().clear()
     click.secho('chat history has been cleared')
 
+@cli.group()
+def settings(): pass
+
+
+@settings.command()
+def get():
+    """ shows a table of all setings that exist """
+    tbl = Table()
+    tbl.add_column('tag')
+    tbl.add_column('value')
+    
+    for row in Settings().getAll():
+        tbl.add_row(
+            row['tag'], 
+            str(row['val']).strip()
+        )
+    Console().print(tbl)
+
+@settings.command()
+@click.argument('tag', type=click.Choice(Settings().readTags()))
+@click.argument('val', type=any)
+def set(tag, val):
+    Settings().set(tag, val)
 
 
 if __name__ == '__main__':
