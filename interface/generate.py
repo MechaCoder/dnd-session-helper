@@ -2,6 +2,7 @@ from faker import Faker
 from rich.text import Text
 from rich.console import Console, RenderGroup
 from rich.panel import Panel
+from rich.columns import Columns
 
 from random import choice, choices, randint
 
@@ -117,7 +118,7 @@ def displayComplexNPC():
     genderRow = f'[bold]Presentation[/bold] [{c}]{gender}[/{c}]'
     appearanceRow = '[bold]appearance:[/bold] ' + info['appearance']
     strengthRow = '[bold]stength ability: [/bold]' + info['abilities_high']
-    weakerRow = '[bold]stength ability: [/bold]' + info['abilities_lower']
+    weakerRow = '[bold]weaker ability: [/bold]' + info['abilities_lower']
     talentRow = '[bold]talent: [/bold]' + info['talent']
     mannerRow = '[bold]mannerism: [/bold]' + info['mannerisms']
     traitRow = '[bold]trait: [/bold]' + info['trait']
@@ -147,33 +148,38 @@ def displayComplexNPC():
     ideal += ', ' + info['other_ideal']
 
     idealRow = '[bold]Ideals: [/bold]' + ideal
-    bondRow = '[bold]Bond: [/bold]' + info['bond']
+    # bondRow = '[bold]Bond: [/bold]' + info['bond']
     secretRow = '[bold]secret: [/bold]' + info['secret']
     raceRow = '[bold]race: [/bold]' + info['races']
 
     jobsRow = '[bold]Jobs: [/bold]' + info['jobs']
     ageRow = '[bold]Age: [/bold]' + str(genAge(info=info))
     
-    pannel = RenderGroup(
-        nameRow, 
-        genderRow,
-        appearanceRow,
+    psy = RenderGroup(
         strengthRow,
         weakerRow,
         talentRow,
         mannerRow,
-        traitRow,
         bondRow,
         flawsRow,
         alignmentRow,
         idealRow,
-        bondRow,
-        secretRow,
+        secretRow
+
+    )
+    phisc = RenderGroup(
+        ageRow,
+        genderRow,
+        appearanceRow,
+        traitRow,
         raceRow,
-        jobsRow,
-        ageRow
+        jobsRow
     )
 
+    base = Columns(
+            [phisc, psy]
+    )
     con = Console()
-    con.print(pannel)
+    con.print(nameRow)
+    con.print(base)
 

@@ -2,6 +2,8 @@ from random import choice
 from datetime import date, datetime
 from os import remove
 
+from rich import console
+
 from data.campain import CampainData
 from click import prompt, Path
 from data import Screen, Campain, Settings, Combat, History
@@ -14,6 +16,8 @@ from pyperclip import copy
 
 from interface.tables import listScreens
 from interface.display import displayScreen
+from interface.generate import displayComplexNPC
+
 
 screenObj = Screen()
 campainObj = Campain()
@@ -245,6 +249,16 @@ def get():
 def set(tag, val):
     Settings().set(tag, val)
 
+@cli.group()
+def gen(): 
+    """ there is a genrateor for NPCs """
+    pass
+
+@gen.command()
+def complex():
+    char = displayComplexNPC()
+    Console().print(char)
+    
 
 if __name__ == '__main__':
     cli()
