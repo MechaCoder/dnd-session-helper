@@ -147,19 +147,27 @@ def ls():
     tbl.add_column('id')
     tbl.add_column('title')
     tbl.add_column('bio')
+    tbl.add_column('active')
+
+    activeId = Settings().get('Active Campain')
     
     for row in Campain().readAll():
-        tbl.add_row(str(row.doc_id), row['title'], row['bio'])
+        a = ''
+
+        if row.doc_id == activeId:
+            a = ":white_check_mark:"
+
+        tbl.add_row(str(row.doc_id), row['title'], row['bio'], a)
 
     Console().print(tbl)
 
 campainidList = campainObj.listDoc_ids()
-campainidList.append('0')
 
 @campaign.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
 def active(campain_id):
-    Settings().set('Active Campain', campain_id)
+    campain_id = int(campain_id)
+    a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
 
 @cli.group()
