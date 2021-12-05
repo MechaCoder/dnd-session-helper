@@ -147,9 +147,17 @@ def ls():
     tbl.add_column('id')
     tbl.add_column('title')
     tbl.add_column('bio')
+    tbl.add_column('active')
+
+    activeId = Settings().get('Active Campain')
     
     for row in Campain().readAll():
-        tbl.add_row(str(row.doc_id), row['title'], row['bio'])
+        a = ''
+
+        if row.doc_id == activeId:
+            a = ":white_check_mark:"
+
+        tbl.add_row(str(row.doc_id), row['title'], row['bio'], a)
 
     Console().print(tbl)
 
