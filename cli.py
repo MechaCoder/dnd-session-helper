@@ -162,12 +162,12 @@ def ls():
     Console().print(tbl)
 
 campainidList = campainObj.listDoc_ids()
-campainidList.append('0')
 
 @campaign.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
 def active(campain_id):
-    Settings().set('Active Campain', campain_id)
+    campain_id = int(campain_id)
+    a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
 
 @cli.group()
