@@ -64,7 +64,7 @@ class ScreenData(DatabaseBase):
         if isinstance(title, str) == False:
             raise TypeError('the title needs to be string')
 
-        if title == None:
+        if title == None or title == 'screen':
             title = ""
 
         row['title'] = str(title)
