@@ -3,6 +3,8 @@ from random import choices
 from os.path import isfile
 from validators import url
 
+from rich import print
+
 from tinydb_base import DatabaseBase
 from tinydb import Query
 import validators
@@ -19,7 +21,7 @@ def _mkHex(l:int=8):
 
 class ScreenData(DatabaseBase):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain'):
+    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain:int'):
         super().__init__(file=file, table=table, requiredKeys=requiredKeys)
         self.settings = SettingsData()
 
@@ -30,7 +32,7 @@ class ScreenData(DatabaseBase):
 
         return False
 
-    def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = '') -> int:
+    def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = ''):
         row = {}
         hexval = _mkHex(l=4)
 
@@ -65,7 +67,7 @@ class ScreenData(DatabaseBase):
         if title == None:
             title = ""
 
-        row['title'] = title
+        row['title'] = str(title)
 
         if isinstance(dm_notes, str) == False:
             raise TypeError('the dm_notes need to be type string')
@@ -83,7 +85,8 @@ class ScreenData(DatabaseBase):
 
         row['pl_notes'] = pl_notes
 
-        return (super().create(row), row['hex'])
+        created_id = super().create(row)
+        return (created_id, row['hex'])
 
     def getByHex(self, hexval:str):
         
