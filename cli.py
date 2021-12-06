@@ -11,8 +11,10 @@ from data import Screen, Campain, Settings, Combat, History
 import click
 from rich.table import Table
 from rich.console import Console
+
 from rich import print, text
 from pyperclip import copy
+from time import sleep
 
 from interface.tables import listScreens
 from interface.display import displayScreen
@@ -271,6 +273,24 @@ def complex():
 def simple():
     char = displaySimpleNPC()
     Console().print(char)
+
+@cli.command()
+@click.argument('hours', type=int, default=0)
+@click.argument('minute', type=int, default=0)
+@click.argument('secounds', type=int, default=10)
+def countdown(hours:int = 0, minute:int = 0, secounds:int = 10):
+
+    timerSecs = secounds
+    timerSecs += (minute * 60)
+    timerSecs += (hours * 3600)
+
+    with Console().status('Countdown') as status:
+        while timerSecs:
+            sleep(1)
+            status.update(f'counting down [{timerSecs}]')
+            timerSecs -= 1
+
+    pass
 
 if __name__ == '__main__':
     cli()
