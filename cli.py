@@ -16,7 +16,7 @@ from pyperclip import copy
 
 from interface.tables import listScreens
 from interface.display import displayScreen
-from interface.generate import displayComplexNPC
+from interface.generate import displayComplexNPC, displaySimpleNPC
 
 
 screenObj = Screen()
@@ -266,7 +266,11 @@ def gen():
 def complex():
     char = displayComplexNPC()
     Console().print(char)
-    
+
+@gen.command()
+def simple():
+    char = displaySimpleNPC()
+    Console().print(char)
 
 if __name__ == '__main__':
     cli()
