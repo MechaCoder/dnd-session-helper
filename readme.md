@@ -1,16 +1,53 @@
 # dnd session helper
 
-A tool to asist Dungin masters who are useing discord.
+A tool that helps DMs to relay vital information using discord. In dnd campaign, there is interactions and situations where there needs to be text and images sent.
 
-in dnd a campain, Campain can be broken into sessions, and sessions can be broken down to seen, this tool, helps DM by outputing information that they need to players to see with a picture and text. this is bot that sits on the discoard server and the server.py is ran on your computer.
+## Important Concepts
 
-currently a sceen is made up of three concepts
+### cli vs server
 
-+ title : a handy thing that will let you know what seen your looking at
-+ picture: this can be a map, or a picture of an important chariter, something sets the seen for you and the players.
-+ soundtrack: this is something that is played in the background, (this needs to be worked on)
-+ notes: notes are split based on privete value (bool) if there are private then they will not be seen in discord but printed to the teminal window.
+the cli is method that you use to create, change and remove content. the commands tables is below.
 
-to have a working bot on your instance you need to have installed python3.7 and pipenv (google), and to set up the bot in your own [dev pannel](https://discord.com/developers/applications). you can run the server by runing pipenv run python server.py.
+#### Screen
 
-to interact with the data modual you will need to use, `cli.py`, the commands are based on simple unix commands (mk,ls and rm) and are grouped by the modeal, e.g. to create a sceen you would enter `pipenv run python cli.py screen mk 'this is a thing' --pic './test.jpg' --soundtrack 'youtubeVideo'`. use `pipenv run python cli.py --help` for more information
+|command|arguments|notes|
+|---|---|---|
+|cat|`hex`| this allows you to view a screen by the hex |
+|cp| `hex`| this copys a segment to your clip that can be pasted in the discord chat|
+|ls|| this diplays a table showing all.|
+|mk|`title`, `--pic`, `--soundtrack`, `--dm_notes`, `--pl_notes`|this creates a new screen|
+|rm|`hex`| remove screen by hex|
+|update|||
+|-- notes|`hex`, `dm|pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
+|-- picture|`hex`,`url|path`|this will allow you to update the img that a hex uses|
+|-- soundtrack|`hex`,`url|path`|this will allow you to update the img that a hex uses|
+|-- title|`hex`, `new title`|this will allow you to update the title|
+
+#### campaign
+
+|command|arguments|notes|
+|---|---|---|
+|active|`id`|sets the active campign with in the system |
+|ls||this prints a table of campaigns in the system |
+|mk||creates a new campaign|
+
+#### combat
+
+|command|arguments|notes|
+|---|---|---|
+|ls||table of combat|
+|mk|`name`, `url`|creates a combat element|
+|rm| `id`| removes combat by id|
+
+___
+
+### Screen Details
+
+A Screen is a snapshot; this can be an NPC (non-playable character), giving the party a letter, a menu. The screen is made up of the following;
+
+- hex; the hex is a four-digit code, which is made up letters and numbers and is used to fetch a screen.
+- soundtrack; this soundtrack is a `Groovy` compatible URL this talked about later.
+- picture; this can be an image path on your local system or a URL.
+- title; this title is something that helps you remember what the content is.
+- dm notes; these note that will appear on the server screen  
+- pl notes; these note are sent to the discord server.
