@@ -40,10 +40,12 @@ with con.status("starting build") as s:
         )
 
     s.update("createing screens")
-    for e in range(10):
+    for e in range(100):
         screen.create(
             'https://www.youtube.com/watch?v=exskpUQQUtI',
             'https://joincake.imgix.net/neven-krcmarek-2Ni0lCRF9bw-unsplash.jpg?w=761&height=348&fit=crop&crop=edges&auto=format&dpr=1',
             title=f.name(),
-            campain=utill_rand_campId()
+            campain=utill_rand_campId(),
+            pl_notes=f.text(),
+            dm_notes=f.text()
         )

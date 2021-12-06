@@ -8,11 +8,11 @@ class SettingsData(GetSet):
         if self.exist('Active Campain') == False:
             self.set('Active Campain', 1)
 
-        if self.exist('chatH istory') == False:
+        if self.exist('chatHistory') == False:
             self.set('chatHistory', False)
 
-        if self.exist('displayServerSide'):
-            self.set('displayServerSide', False)
+        if self.exist('displayServerSide') == False:
+            self.set('displayServerSide', True)
 
 
     def exist(self, tag:str):

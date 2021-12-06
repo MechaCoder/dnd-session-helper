@@ -13,10 +13,10 @@ from pyfiglet import Figlet
 
 from data import Screen, Settings
 
-def displayScreen(hex):
+def displayScreen(hex, overRide=False):
     doc = Screen().getByHex(hex)
 
-    if Settings().get('displayServerSide') == False:
+    if (Settings().get('displayServerSide') == False) or (overRide):
         return doc
     
     con = Console()
