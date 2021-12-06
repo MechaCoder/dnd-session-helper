@@ -67,7 +67,7 @@ class LocalClient(Client):
             Console().clear()
             doc = displayScreen(hex)
 
-            if isfile(doc['picture']):
+            if isfile(doc['picture']) or doc['picture'] == '':
                 await message.channel.send(
                     file=discord.File(doc['picture']) 
                 )

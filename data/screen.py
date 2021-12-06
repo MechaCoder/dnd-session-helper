@@ -1,3 +1,4 @@
+from posixpath import expanduser
 from string import digits, ascii_lowercase
 from random import choices
 from os.path import isfile
@@ -8,7 +9,7 @@ from rich import print
 from tinydb_base import DatabaseBase
 from tinydb import Query
 import validators
-import imghdr
+from requests.exceptions import ConnectionError
 
 from .commons import copylocalImg
 from .exception import DataException
@@ -51,7 +52,10 @@ class ScreenData(DatabaseBase):
         if isfile(picture) == False and url(picture) == False:
             raise TypeError('the picture needs to a local image or a url')
 
-        row['picture'] = copylocalImg(picture)
+        try:
+            row['picture'] = copylocalImg(picture)
+        except ConnectionError as err:
+            row['picture'] = ''
 
         if isinstance(campain, int) == False:
             raise TypeError('the campain needs to a int')
