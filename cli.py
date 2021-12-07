@@ -290,7 +290,6 @@ def countdown(hours:int, minute:int, secounds:int):
             sleep(1)
             status.update(f'counting down [{timerSecs}]')
             timerSecs -= 1
-
     pass
 
 if __name__ == '__main__':
