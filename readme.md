@@ -29,7 +29,7 @@ the cli is method that you use to create, change and remove content. the command
 |---|---|---|
 |active|`id`|sets the active campign with in the system |
 |ls||this prints a table of campaigns in the system |
-|mk||creates a new campaign|
+|mk|`name`, `bio`|creates a new campaign|
 
 #### combat
 

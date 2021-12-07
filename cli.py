@@ -66,6 +66,7 @@ def cat(hex):
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cp(hex):
+    """ copys a screen data elemem to  the clipboard. """
     doc = screenObj.getByHex(hex)
     msg = "-play {} \n [dndsh:{}]".format(
         doc['soundtrack'],
@@ -275,21 +276,20 @@ def simple():
     Console().print(char)
 
 @cli.command()
-@click.argument('hours', type=int, default=0)
-@click.argument('minute', type=int, default=0)
-@click.argument('secounds', type=int, default=10)
-def countdown(hours:int = 0, minute:int = 0, secounds:int = 10):
+@click.option('--hours', type=int, default=0)
+@click.option('--minute', type=int, default=0)
+@click.argument('secounds', type=int, default=0)
+def countdown(hours:int, minute:int, secounds:int):
 
     timerSecs = secounds
     timerSecs += (minute * 60)
     timerSecs += (hours * 3600)
 
-    with Console().status('Countdown') as status:
+    with Console().status('countdown', spinner='clock') as status:
         while timerSecs:
             sleep(1)
             status.update(f'counting down [{timerSecs}]')
             timerSecs -= 1
-
     pass
 
 if __name__ == '__main__':
