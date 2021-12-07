@@ -19,6 +19,9 @@ def utill_rand_campId():
 
 with con.status("starting build") as s:
 
+    if isfile('.dev'):
+        open('.dev', 'a').close()
+
     if isdir('.local'):
         for e in glob('.local/*'):
             remove(e)
