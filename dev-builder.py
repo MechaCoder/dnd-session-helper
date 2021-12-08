@@ -22,14 +22,14 @@ with con.status("starting build") as s:
     if isfile('.dev'):
         open('.dev', 'a').close()
 
-    if isdir('.local'):
-        for e in glob('.local/*'):
+    if isdir('.local_dev'):
+        for e in glob('.local_dev/*'):
             remove(e)
 
         rmdir('.local')
 
-    if isfile('ds.json'):
-        remove('ds.json')
+    if isfile('ds.dev.json'):
+        remove('ds.dev.json')
 
     cam = Campain()
     screen = Screen()
