@@ -2,8 +2,8 @@ from .base import BaseData
 
 class EncounterData(BaseData): 
     
-    def __init__(self, file: str = 'ds.json', table: str = 'encounter', requiredKeys='name,url,campaign'):
-        super().__init__(file=file, table=table, requiredKeys=requiredKeys)
+    def __init__(self, table: str = 'encounter', requiredKeys='name,url,campaign'):
+        super().__init__(table=table, requiredKeys=requiredKeys)
 
     def create(self, name:str, url:str, campaign_id:int) -> int:
         row = {

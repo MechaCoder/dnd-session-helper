@@ -2,3 +2,5 @@ ds.json
 
 
 .local/
+ds.dev.json
+.dev

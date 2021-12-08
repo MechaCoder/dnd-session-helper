@@ -6,7 +6,7 @@ from validators import url
 
 from rich import print
 
-from tinydb_base import DatabaseBase
+from .base import BaseData
 from tinydb import Query
 import validators
 from requests.exceptions import ConnectionError
@@ -20,10 +20,10 @@ def _mkHex(l:int=8):
     return ''.join(choices(population=pool, k=l))
 
 
-class ScreenData(DatabaseBase):
+class ScreenData(BaseData):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain:int'):
-        super().__init__(file=file, table=table, requiredKeys=requiredKeys)
+    def __init__(self, table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain:int'):
+        super().__init__(table=table, requiredKeys=requiredKeys)
         self.settings = SettingsData()
 
     def _checkHex(self, hex:str):

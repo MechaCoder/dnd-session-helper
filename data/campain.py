@@ -1,9 +1,10 @@
 from tinydb_base import DatabaseBase
+from .base import BaseData
 
-class CampainData(DatabaseBase):
+class CampainData(BaseData):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'campain', requiredKeys='title,bio'):
-        super().__init__(file=file, table=table, requiredKeys=requiredKeys)
+    def __init__(self, table: str = 'campain', requiredKeys='title,bio'):
+        super().__init__(table=table, requiredKeys=requiredKeys)
 
         if len(self.readAll()) == 0:
             self.create('my first campain')
