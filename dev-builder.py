@@ -7,7 +7,7 @@ from os.path import isdir, isfile
 from glob import glob
 from random import randint
 
-from data import Campain, Screen
+from data import Campain, Screen, EncounterData
 from rich import print
 from rich.console import Console
 
@@ -33,7 +33,9 @@ with con.status("starting build") as s:
 
     cam = Campain()
     screen = Screen()
+    combat = EncounterData()
     f = Faker()
+
     s.update("createing campigns")
 
     for e in range(10):
@@ -51,4 +53,12 @@ with con.status("starting build") as s:
             campain=utill_rand_campId(),
             pl_notes=f.text(),
             dm_notes=f.text()
+        )
+
+    s.update("createing Combats")
+    for e in range(100):
+        combat.create(
+            name=f.name(),
+            url=f.url(),
+            campaign_id=utill_rand_campId(),
         )

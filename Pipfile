@@ -15,6 +15,7 @@ pyperclip = "*"
 pyfiglet = "*"
 requests = "*"
 faker = "*"
+python-docx = "*"
 
 [requires]
 python_version = "3.7"

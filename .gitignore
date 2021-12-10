@@ -4,3 +4,6 @@ ds.json
 .local/
 ds.dev.json
 .dev
+test.*
+*.docx
+.play.*
