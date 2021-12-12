@@ -3,6 +3,9 @@ from os.path import isfile
 from tinydb_base import DatabaseBase
 from tinydb_base.getSet import GetSet
 
+def projectRoot():
+    return abspath(dirname('Pipfile'))
+
 def dsfile():
     proot = abspath(dirname('Pipfile'))
     f = 'ds.json'

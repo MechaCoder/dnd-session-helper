@@ -3,6 +3,7 @@ from datetime import date, datetime
 from os import remove
 
 from rich import console
+from data import campain
 
 from data.campain import CampainData
 from click import prompt, Path
@@ -19,6 +20,7 @@ from time import sleep
 from interface.tables import listScreens
 from interface.display import displayScreen
 from interface.generate import displayComplexNPC, displaySimpleNPC
+from interface.export import export as exporter
 
 
 screenObj = Screen()
@@ -291,6 +293,14 @@ def countdown(hours:int, minute:int, secounds:int):
             status.update(f'counting down [{timerSecs}]')
             timerSecs -= 1
     pass
+
+@cli.command()
+@click.argument('campain_id', type=click.Choice(campainidList))
+def export(campain_id):
+    campain_id = int(campain_id)
+    exporter(campain_id)
+
+
 
 if __name__ == '__main__':
     cli()

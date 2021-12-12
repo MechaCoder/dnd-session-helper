@@ -1,12 +1,18 @@
+from os.path import join
+from time import time_ns
+
 from docx import Document
 from docx.shared import Inches
 from data import Campain, Screen, Combat
+from data.base import projectRoot
+from rich.console import Console
 
 
 def export(campaign:int):
-    
+
     campaignData = Campain()
     screenData = Screen()
+    con = Console()
 
     docObj = Document()
     
@@ -20,8 +26,9 @@ def export(campaign:int):
     docObj.add_heading(cData['title'], 0)
     docObj.add_paragraph(cData['bio'])
     docObj.add_page_break()
-
     docObj.add_heading("Screens", 1)
+
+    con.print('exporting screens')
 
     for screen in sData:
 
@@ -56,11 +63,14 @@ def export(campaign:int):
     firstCells[1].text = "name"
     firstCells[2].text = "url"
 
+    con.print('exporting Encounters')
 
     for row in Combat().readByCompagn(campaign):
         rows = tbl.add_row().cells
         rows[0].text = str(row.doc_id)
         rows[1].text = row['name']
         rows[2].text = row['url']
-
-    docObj.save('test.docx')
+    ts = time_ns()
+    path = join(projectRoot(), '.local/', f'{campaign}-export-{ts}.docx')
+    con.print(f'exported to {path}')
+    docObj.save(path)
