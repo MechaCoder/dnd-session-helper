@@ -105,6 +105,14 @@ class ScreenData(BaseData):
             rows.append(row['hex'])
         return rows
 
+    def readBycampain(self, campain_id:int):
+        
+        db = self.createObj()
+        rows = db.tbl.search(Query().campain == campain_id)
+        db.close()
+
+        return rows
+
     def update(self, hex:str, tag:str, value:any):
 
         if isinstance(value, str) == False:
@@ -124,4 +132,3 @@ class ScreenData(BaseData):
         
         return True
 
-    

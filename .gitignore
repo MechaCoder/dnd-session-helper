@@ -2,5 +2,9 @@ ds.json
 
 
 .local/
+.local_dev
 ds.dev.json
 .dev
+test.*
+*.docx
+.play.*
