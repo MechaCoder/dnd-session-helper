@@ -32,7 +32,7 @@ def displayScreen(hex, overRide=False):
     pl_notes_panel = Panel(
         title='Players Notes',
         renderable=pl_string,
-        style="green"
+        border_style="green"
     )
 
     dm_string = doc['dm_notes']
@@ -44,7 +44,7 @@ def displayScreen(hex, overRide=False):
     dm_notes_panel = Panel(
         title='Dungeon Masters Notes ',
         renderable=dm_string,
-        style="red"
+        border_style="red"
     )
 
     tWidth = (tWidth / 2) - 1

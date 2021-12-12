@@ -1,6 +1,7 @@
 from posixpath import join
 from random import choice
 from faker import Faker
+from mdgen import MarkdownPostProvider
 
 from os import mkdir, rmdir, remove
 from os.path import isdir, isfile
@@ -38,6 +39,7 @@ with con.status("starting build") as s:
     screen = Screen()
     combat = EncounterData()
     f = Faker()
+    f.add_provider(MarkdownPostProvider)
 
     s.update("createing campigns")
 
@@ -54,8 +56,8 @@ with con.status("starting build") as s:
             'https://joincake.imgix.net/neven-krcmarek-2Ni0lCRF9bw-unsplash.jpg?w=761&height=348&fit=crop&crop=edges&auto=format&dpr=1',
             title=f.name(),
             campain=utill_rand_campId(),
-            pl_notes=f.text(),
-            dm_notes=f.text()
+            pl_notes=f.post(size='large'),
+            dm_notes=f.post(size='large')
         )
 
     s.update("createing Combats")
