@@ -2,7 +2,7 @@ from posixpath import join
 from random import choice
 from faker import Faker
 
-from os import rmdir, remove
+from os import mkdir, rmdir, remove
 from os.path import isdir, isfile
 from glob import glob
 from random import randint
@@ -19,14 +19,17 @@ def utill_rand_campId():
 
 with con.status("starting build") as s:
 
-    if isfile('.dev'):
+    if isfile('.dev') == False:
+        con.print('createing .dex file')
         open('.dev', 'a').close()
 
     if isdir('.local_dev'):
+        con.print('createing .local_dev/ dircector')
         for e in glob('.local_dev/*'):
             remove(e)
 
-        rmdir('.local')
+        rmdir('.local_dev')
+    mkdir('.local_dev')
 
     if isfile('ds.dev.json'):
         remove('ds.dev.json')

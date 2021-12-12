@@ -1,4 +1,5 @@
 from os.path import join
+from os.path import isfile
 from time import time_ns
 
 from docx import Document
@@ -70,7 +71,14 @@ def export(campaign:int):
         rows[0].text = str(row.doc_id)
         rows[1].text = row['name']
         rows[2].text = row['url']
+
     ts = time_ns()
-    path = join(projectRoot(), '.local/', f'{campaign}-export-{ts}.docx')
+
+    dirname = '.local/'
+    if isfile('.dev'):
+        dirname = '.local_dev/'
+
+    path = join(projectRoot(), dirname, f'{campaign}-export-{ts}.docx')
+    
     con.print(f'exported to {path}')
     docObj.save(path)
