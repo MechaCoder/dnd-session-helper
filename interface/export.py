@@ -8,6 +8,19 @@ from data import Campain, Screen, Combat
 from data.base import projectRoot
 from rich.console import Console
 
+# from docx2pdf import convert
+from subprocess import check_output
+
+def convert(path:str):
+    dirname = '.local/'
+    if isfile('.dev'):
+        dirname = '.local_dev/'
+
+    return check_output([
+        'libreoffice',  '--convert-to', 'pdf', path, '--outdir', dirname
+    ])
+
+
 
 def export(campaign:int):
 
@@ -82,3 +95,5 @@ def export(campaign:int):
     
     con.print(f'exported to {path}')
     docObj.save(path)
+    x = convert(path)
+    con.print(f'converted to docx and pdf')

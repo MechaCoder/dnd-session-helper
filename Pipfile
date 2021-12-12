@@ -16,6 +16,7 @@ pyfiglet = "*"
 requests = "*"
 faker = "*"
 python-docx = "*"
+docx2pdf = "*"
 
 [requires]
 python_version = "3.7"
