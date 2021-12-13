@@ -7,7 +7,7 @@ from data import campain
 
 from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings, Combat, History
+from data import Screen, Campain, Settings, Combat, History, Actions
 
 import click
 from rich.table import Table
@@ -300,6 +300,18 @@ def export(campain_id):
     campain_id = int(campain_id)
     exporter(campain_id)
 
+@cli.group()
+def actions(): pass
+
+@actions.command()
+@click.argument('from_hex', type=click.Choice(listofhexValues))
+@click.argument('to_hex', type=click.Choice(listofhexValues))
+def mk(from_hex, to_hex):
+    Actions().create(
+        from_tag=from_hex,
+        to_tag=to_hex
+    )
+    Console().print("new action created")
 
 
 if __name__ == '__main__':

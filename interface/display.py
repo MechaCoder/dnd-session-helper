@@ -1,17 +1,41 @@
 from os import get_terminal_size
 from os.path import isfile
+from random import choice
 
-from rich import align, columns
-from rich.panel import Panel
+from data import Actions, Screen, Settings
+from pyfiglet import Figlet
+from rich import align, columns, console
 from rich.columns import Columns
-from rich.text import Text
-from rich.rule import Rule
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.rule import Rule
+from rich.text import Text
+from treelib import Tree
+from treelib.exceptions import DuplicatedNodeIdError, NodeIDAbsentError
 
-from pyfiglet import Figlet
+def showTree(rootHex:str):
+    
+    actions = Actions().readAll()
+    tree = Tree()
+    tree.create_node(rootHex, rootHex)
 
-from data import Screen, Settings
+    i = 10
+    while i > 0:
+        # print(i)
+        for a in actions:
+            try:
+                tree.create_node(a['too'], a['too'], parent=a['from'])
+            except NodeIDAbsentError as err:
+                # print(err)
+                pass
+            except DuplicatedNodeIdError as err:
+                # print(err)
+                pass
+
+        i -= 1
+    tree.show()
+
 
 def displayScreen(hex, overRide=False):
     doc = Screen().getByHex(hex)
@@ -84,6 +108,7 @@ def displayScreen(hex, overRide=False):
     )
 
     Console().print(cols)
+    showTree(hex)
 
     return doc
 
