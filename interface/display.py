@@ -2,7 +2,7 @@ from os import get_terminal_size
 from os.path import isfile
 from random import choice
 
-from data import Actions, Screen, Settings
+from data import Actions, Screen, Settings, screen
 from pyfiglet import Figlet
 from rich import align, columns, console
 from rich.columns import Columns
@@ -17,15 +17,21 @@ from treelib.exceptions import DuplicatedNodeIdError, NodeIDAbsentError
 def showTree(rootHex:str):
     
     actions = Actions().readAll()
+    screen = Screen()
     tree = Tree()
+
     tree.create_node(rootHex, rootHex)
+
+    elementsTitle = {}
+    for row in screen.readAll():
+        elementsTitle[row['hex']] = row['title']
 
     i = 10
     while i > 0:
-        # print(i)
         for a in actions:
             try:
-                tree.create_node(a['too'], a['too'], parent=a['from'])
+                t = "{} - {}".format(a['too'], elementsTitle[a['too']])
+                tree.create_node(t, a['too'], parent=a['from'])
             except NodeIDAbsentError as err:
                 # print(err)
                 pass
