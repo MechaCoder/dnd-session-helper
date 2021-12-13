@@ -8,11 +8,25 @@ from os.path import isdir, isfile
 from glob import glob
 from random import randint
 
-from data import Campain, Screen, EncounterData
+from data import Campain, Screen, EncounterData, Actions
 from rich import print
 from rich.console import Console
 
 con = Console()
+
+def randomised_screen_hex():
+    pool = []
+
+    for x in range(1000):
+        pool.append(
+            choice(
+                Screen().getListOfHexs()
+            )
+        )
+
+
+    return choice(pool)
+
 
 def utill_rand_campId():
     ids = Campain().listDoc_ids()
@@ -21,7 +35,7 @@ def utill_rand_campId():
 with con.status("starting build") as s:
 
     if isfile('.dev') == False:
-        con.print('createing .dex file')
+        con.print('createing .dev file')
         open('.dev', 'a').close()
 
     if isdir('.local_dev'):
@@ -38,6 +52,7 @@ with con.status("starting build") as s:
     cam = Campain()
     screen = Screen()
     combat = EncounterData()
+    actions = Actions()
     f = Faker()
     f.add_provider(MarkdownPostProvider)
 
@@ -60,10 +75,22 @@ with con.status("starting build") as s:
             dm_notes=f.post(size='large')
         )
 
-    s.update("createing Combats")
+    s.update("creating actions")
+    # for from_hex in Screen().getListOfHexs():
+    hexPool = Screen().getListOfHexs()
     for e in range(100):
+        try:
+            Actions().create(choice(hexPool), choice(hexPool))
+        except Exception as err:
+            pass
+
+
+
+    s.update("createing Combats")
+    for e in range(10):
         combat.create(
             name=f.name(),
             url=f.url(),
             campaign_id=utill_rand_campId(),
         )
+    
