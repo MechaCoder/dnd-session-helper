@@ -75,10 +75,9 @@ class Campain(CampainData):
 
 class Combat(EncounterData): 
 
-    def create(self, name: str, url: str) -> int:
+    def create(self, name: str, url: str, screenHex: str) -> int:
 
         if validators.url(url) == False:
             raise TypeError('url is not vaild url')
 
-        campaign_id = Settings().get('Active Campain')
-        return super().create(name, url, campaign_id)
+        return super().create(name, url, screenHex=screenHex)

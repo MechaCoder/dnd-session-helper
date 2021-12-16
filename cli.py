@@ -178,6 +178,7 @@ def active(campain_id):
 @cli.group()
 def combat(): pass
 
+#  TODO: this needs to be updated
 @combat.command()
 @click.argument('name', type=str)
 @click.argument('url', type=str)
