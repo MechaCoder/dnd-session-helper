@@ -1,6 +1,6 @@
 from .base import BaseData
 from tinydb import Query
-from data import Screen
+from .__init__ import Screen
 
 
 class EncounterData(BaseData): 
