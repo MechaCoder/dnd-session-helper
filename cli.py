@@ -7,7 +7,7 @@ from data import campain
 
 from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings, Combat, History, Actions
+from data import Screen, Campain, Settings, History, Actions
 
 import click
 from rich.table import Table
@@ -174,34 +174,6 @@ def active(campain_id):
     campain_id = int(campain_id)
     a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
-
-@cli.group()
-def combat(): pass
-
-#  TODO: this needs to be updated
-@combat.command()
-@click.argument('name', type=str)
-@click.argument('url', type=str)
-def mk(name, url):
-    Combat().create(name=name, url=url)
-    click.secho('a new encounter has been created', fg='green')
-
-@combat.command()
-def ls():
-    tbl = Table()
-    tbl.add_column('doc id')
-    tbl.add_column('name')
-    tbl.add_column('url')
-    
-    for row in Combat().readAll():
-        tbl.add_row(str(row.doc_id) , row['name'], row['addr'])
-    Console().print(tbl)
-
-@combat.command()
-@click.argument('combat_id', type=click.Choice(Combat().readDoc_ids()))
-def rm(combat_id):
-    Combat().removeById(combat_id)
-    click.secho('combat deleted.', fg='red')
 
 @cli.group()
 def chat():

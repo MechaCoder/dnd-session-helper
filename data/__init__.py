@@ -2,7 +2,6 @@ from tinydb.queries import Query
 from .screen import ScreenData
 from .settings import SettingsData
 from .campain import CampainData
-# from .combat import EncounterData
 from .history import History
 from .actions import Actions
 
@@ -62,13 +61,3 @@ class Screen(ScreenData):
     
 class Settings(SettingsData): pass 
 
-class Campain(CampainData):
-
-    def listDoc_ids(self):
-
-        ids = []
-        for row in self.readAll():
-            ids.append(
-                str(row.doc_id)
-            )
-        return ids
