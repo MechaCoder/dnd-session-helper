@@ -4,6 +4,8 @@ from .settings import SettingsData
 from .campain import CampainData
 from .history import History
 from .actions import Actions
+from .combat import CombatData as Combat
+from .combat import NpcData as Combat_NPC
 
 import validators
 

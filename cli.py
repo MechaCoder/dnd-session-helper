@@ -7,7 +7,7 @@ from data import campain
 
 from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings, History, Actions
+from data import Screen, Campain, Settings, History, Actions, Combat
 
 import click
 from rich.table import Table
@@ -133,6 +133,27 @@ def rm(hex):
     row = screenObj.getByHex(hex)
     remove(row['picture'])
     screenObj.removeByHex(hex)
+
+@screen.group()
+def combat(): pass
+
+@combat.command()
+@click.argument('title', type=str)
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.option('--notes', type=str, default=1)
+def mk(title, hex, notes):
+    Combat().create(
+        screenHex=hex,
+        title=title,
+        notes=notes
+    )
+    pass
+
+@combat.command()
+@click.argument('doc_id', type=int)
+def rm(doc_id):
+    Combat().removeById(doc_id=doc_id)
+    pass
 
 @cli.group()
 def campaign(): pass
