@@ -4,10 +4,9 @@ from os import remove
 
 from rich import console
 from data import campain
-
-from data.campain import CampainData
 from click import prompt, Path
-from data import Screen, Campain, Settings, History, Actions, Combat
+from data import Screen, Settings, History, Actions, CombatData
+from data import CampainData as Campain
 
 import click
 from rich.table import Table
@@ -142,17 +141,19 @@ def combat(): pass
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.option('--notes', type=str, default=1)
 def mk(title, hex, notes):
-    Combat().create(
+    CombatData().create(
         screenHex=hex,
         title=title,
         notes=notes
     )
+    click.secho('a combat ({}) has been created for {}'.format(title, hex))
     pass
 
 @combat.command()
 @click.argument('doc_id', type=int)
 def rm(doc_id):
-    Combat().removeById(doc_id=doc_id)
+    CombatData().removeById(doc_id=doc_id)
+    click.secho('a combat has been removed.', fg='green')
     pass
 
 @cli.group()
@@ -187,7 +188,7 @@ def ls():
 
     Console().print(tbl)
 
-campainidList = campainObj.listDoc_ids()
+campainidList = campainObj.readDoc_ids()
 
 @campaign.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
@@ -276,7 +277,7 @@ def simple():
 @click.option('--minute', type=int, default=0)
 @click.argument('secounds', type=int, default=0)
 def countdown(hours:int, minute:int, secounds:int):
-
+    """creates a countdown timer for breaks and timeed activites"""
     timerSecs = secounds
     timerSecs += (minute * 60)
     timerSecs += (hours * 3600)
@@ -291,6 +292,7 @@ def countdown(hours:int, minute:int, secounds:int):
 @cli.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
 def export(campain_id):
+    """exports a campagin to pdf and doc"""
     campain_id = int(campain_id)
     exporter(campain_id)
 
@@ -301,6 +303,7 @@ def actions(): pass
 @click.argument('from_hex', type=click.Choice(listofhexValues))
 @click.argument('to_hex', type=click.Choice(listofhexValues))
 def mk(from_hex, to_hex):
+    """actions create links between between screens"""
     Actions().create(
         from_tag=from_hex,
         to_tag=to_hex

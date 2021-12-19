@@ -3,7 +3,6 @@ from faker import Faker
 from .base import BaseData
 from .screen import ScreenData
 from tinydb import Query
-from .__init__ import Screen
 from .api import MonstersIndex
 
 class CombatData(BaseData):
