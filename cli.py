@@ -1,6 +1,7 @@
 from random import choice, random
 from datetime import date, datetime
 from os import remove
+from click.decorators import argument
 from faker.proxy import Faker
 
 from rich import console
@@ -160,6 +161,19 @@ def rm(doc_id):
     pass
 
 # TODO: combat read and update
+
+@combat.command()
+@click.argument('screenHex', type=click.Choice(listofhexValues))
+def ls(screenhex):
+    
+    tbl = Table()
+    tbl.add_column('title')
+    tbl.add_column('notes')
+
+    for each in CombatData().readByHex(screenhex):
+        tbl.add_row(each['title'], each['notes'])
+
+    Console().print(tbl)
 
 @combat.group()
 def npc(): pass

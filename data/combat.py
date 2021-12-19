@@ -24,6 +24,12 @@ class CombatData(BaseData):
         }
         return super().create(row)
 
+    def readByHex(self, hex: str):
+        obj = self.createObj()
+        data = obj.tbl.search(Query()['screen.hex'] == hex)
+        obj.close()
+        return data
+
 
 class NpcData(BaseData):
 
