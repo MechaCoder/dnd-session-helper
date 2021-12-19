@@ -1,6 +1,7 @@
-from random import choice
+from random import choice, random
 from datetime import date, datetime
 from os import remove
+from faker.proxy import Faker
 
 from rich import console
 from data import campain
@@ -15,6 +16,8 @@ from rich.console import Console
 from rich import print, text
 from pyperclip import copy
 from time import sleep
+from data.combat import NpcData
+from data.api import MonstersIndex
 
 from interface.tables import listScreens
 from interface.display import displayScreen
@@ -152,9 +155,30 @@ def mk(title, hex, notes):
 @combat.command()
 @click.argument('doc_id', type=int)
 def rm(doc_id):
-    CombatData().removeById(doc_id=doc_id)
+    CombatData().removeById(doc_id=doc_id, prompt=True)
     click.secho('a combat has been removed.', fg='green')
     pass
+
+# TODO: combat read and update
+
+@combat.group()
+def npc(): pass
+
+indexChoices = MonstersIndex().readAllIndex()
+randomName = Faker().first_name()
+combat_ids = CombatData().readDoc_ids()
+
+@npc.command()
+@click.argument('index', type=click.Choice(indexChoices))
+@click.argument('combat_id', type=click.Choice(combat_ids))
+@click.option('--name', type=str, default=randomName)
+def mk(name, index, combat_id):
+
+    NpcData().create(
+        name=name,
+        index=index,
+        combat_id=combat_id
+    )
 
 @cli.group()
 def campaign(): pass
