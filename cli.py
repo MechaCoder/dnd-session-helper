@@ -1,7 +1,9 @@
 from random import choice, random
 from datetime import date, datetime
 from os import remove
+from re import T
 from click.decorators import argument
+from click.termui import confirm
 from faker.proxy import Faker
 
 from rich import console
@@ -154,9 +156,10 @@ def mk(title, hex, notes):
     pass
 
 @combat.command()
-@click.argument('doc_id', type=int)
+@click.argument('doc_id', type=click.Choice(CombatData().readDoc_ids()))
 def rm(doc_id):
-    CombatData().removeById(doc_id=doc_id, prompt=True)
+    doc_id = int(doc_id)
+    CombatData().removeById(doc_id=doc_id,)
     click.secho('a combat has been removed.', fg='green')
     pass
 
@@ -167,11 +170,20 @@ def rm(doc_id):
 def ls(screenhex):
     
     tbl = Table()
+    tbl.add_column('id')
     tbl.add_column('title')
     tbl.add_column('notes')
+    tbl.add_column('npcs')
+
+    npcs = NpcData()
 
     for each in CombatData().readByHex(screenhex):
-        tbl.add_row(each['title'], each['notes'])
+        n = npcs.readByHex(each.doc_id)
+        
+        text = ""
+        for e in n:
+            text += '[red]{}({}) - {}[/red], '.format(e['name'], e.doc_id, e['index'])
+        tbl.add_row( str(each.doc_id), each['title'], each['notes'], text)
 
     Console().print(tbl)
 

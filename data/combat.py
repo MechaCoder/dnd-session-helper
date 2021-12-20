@@ -51,3 +51,11 @@ class NpcData(BaseData):
         }
 
         return super().create(row)
+
+    def readByHex(self, combat_id:int):
+
+        obj = self.createObj()
+        data = obj.tbl.search(Query()['combat.id'] == combat_id)
+        obj.close()
+
+        return data
