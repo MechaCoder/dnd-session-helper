@@ -1,32 +1,28 @@
-from random import choice, random
 from datetime import date, datetime
 from os import remove
+from random import choice, random
 from re import T
+from time import sleep
+
+import click
+from click import Path, prompt
 from click.decorators import argument
 from click.termui import confirm
 from faker.proxy import Faker
-
-from rich import console
-from data import campain
-from click import prompt, Path
-from data import Screen, Settings, History, Actions, CombatData
-from data import CampainData as Campain
-
-import click
-from rich.table import Table
-from rich.console import Console
-
-from rich import print, text
 from pyperclip import copy
-from time import sleep
-from data.combat import NpcData
+from rich import console, print, text
+from rich.console import Console
+from rich.table import Table
+
+from data import Actions
+from data import CampainData as Campain
+from data import CombatData, History, Screen, Settings, campain
 from data.api import MonstersIndex
-
-from interface.tables import listScreens
+from data.combat import NpcData
 from interface.display import displayScreen
-from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.export import export as exporter
-
+from interface.generate import displayComplexNPC, displaySimpleNPC
+from interface.tables import listScreens
 
 screenObj = Screen()
 campainObj = Campain()
@@ -205,6 +201,13 @@ def mk(name, index, combat_id):
         index=index,
         combat_id=combat_id
     )
+
+doc_ids = NpcData().readDoc_ids()
+
+@npc.command()
+@click.argument('doc_ids', type=click.Choice(doc_ids))
+def rm(doc_ids):
+    NpcData().removeById(doc_ids)
 
 @cli.group()
 def campaign(): pass
