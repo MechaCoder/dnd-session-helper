@@ -138,6 +138,14 @@ def rm(hex):
 @screen.group()
 def combat(): pass
 
+combat_ids = CombatData().readDoc_ids
+
+@combat.command()
+@click.argument('combat_id', type=click.Choice(combat_ids) )
+def run(combat_id):
+    pass
+
+
 @combat.command()
 @click.argument('title', type=str)
 @click.argument('hex', type=click.Choice(listofhexValues))

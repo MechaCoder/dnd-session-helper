@@ -7,6 +7,12 @@ from requests.exceptions import RequestException
 
 from .base import projectRoot
 
+def getProfile(monster_index):
+    req = get(url=f'https://www.dnd5eapi.co/api/monsters/{monster_index}')
+    if req.status_code != 200:
+        raise Exception('unable to get monster ({})'.format(monster_index))
+
+    return req.json()
 
 class DbBase(DatabaseBase):
 
