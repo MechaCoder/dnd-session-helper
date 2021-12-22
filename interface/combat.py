@@ -1,24 +1,15 @@
-from json import dumps
-from random import choice
-from sys import maxsize
-
 from click.termui import confirm, secho
-from data import combat
-from data.api import EquipmentIndex, MonstersIndex, getProfile
+from data.api import getProfile
 from data.combat import CombatData, NpcData
 from data.dice import roller
-from rich import columns, layout, markdown, panel, print, print_json, prompt
-from rich.columns import Columns
+from rich import prompt
 from rich.console import Console, Group
-from rich.json import JSON
 from rich.layout import Layout
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.rule import Rule
-from rich.syntax import Syntax
 from rich.table import Table
-from rich.text import Text
 
 
 def modifiers(score):
@@ -133,9 +124,9 @@ class CombatDisplay():
                 con.print(
                     self.renderable(each[0])
                 )
-                run_obj = False
-                break
                 x = Prompt.ask('::>>')
+                if x == 'exit':
+                    exit()
                 
 
     def renderable(self, name:str):
@@ -205,18 +196,17 @@ class CombatDisplay():
         )
 
         stats.add_row(
-            str(profile['strength']),
-            str(profile['dexterity']),
-            str(profile['constitution']),
-            str(profile['intelligence']),
-            str(profile['wisdom']),
-            str(profile['charisma'])
+            str(profile['strength']) + " [" + str(modifiers(profile['strength'])) + "]" ,
+            str(profile['dexterity']) + " [" + str(modifiers(profile['dexterity'])) + "]" ,
+            str(profile['constitution']) + " [" + str(modifiers(profile['constitution'])) + "]" ,
+            str(profile['intelligence']) + " [" + str(modifiers(profile['intelligence'])) + "]" ,
+            str(profile['wisdom']) + " [" + str(modifiers(profile['wisdom'])) + "]" ,
+            str(profile['charisma']) + " [" + str(modifiers(profile['charisma'])) + "]" 
         )
 
         tbl2 = Table.grid()
         x = ""
         for each in profile['proficiencies']:
-            print(each)
             x += "[red]{}[/red] (+{}), ".format(
                 each['proficiency']['name'],
                 each['value']
