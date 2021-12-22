@@ -7,4 +7,6 @@ ds.dev.json
 .dev
 test.*
 *.docx
-.play.*
+*.pyc
+*.json
+.play*.*

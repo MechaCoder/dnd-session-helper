@@ -54,8 +54,4 @@ def downloadImgHTTP(url_src:str):
         with open(dest, 'wb') as f:
             copyfileobj(req.raw, f)
 
-        return dest
-        
-
-
-    
+    return dest

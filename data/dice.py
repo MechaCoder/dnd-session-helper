@@ -60,8 +60,8 @@ class DiceHistory(BaseData):
         ts = datetime.now().timestamp()
         row = {
             'slug': slug,
-            'result': result,
-            'ts': ts
+            'result': str(result),
+            'ts': str(ts)
         }
         return super().create(row)
 

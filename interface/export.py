@@ -4,7 +4,9 @@ from time import time_ns
 
 from docx import Document
 from docx.shared import Inches
-from data import Campain, Screen, Combat
+from data import Screen
+from data import CampainData as Campain
+from data import CombatData as Combat
 from data.base import projectRoot
 from rich.console import Console
 

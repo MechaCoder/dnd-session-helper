@@ -8,7 +8,7 @@ from os.path import isdir, isfile
 from glob import glob
 from random import randint
 
-from data import Campain, Screen, EncounterData, Actions
+from data import Campain, Screen, Actions
 from rich import print
 from rich.console import Console
 
@@ -51,7 +51,6 @@ with con.status("starting build") as s:
 
     cam = Campain()
     screen = Screen()
-    combat = EncounterData()
     actions = Actions()
     f = Faker()
     f.add_provider(MarkdownPostProvider)
@@ -84,13 +83,4 @@ with con.status("starting build") as s:
         except Exception as err:
             pass
 
-
-
-    s.update("createing Combats")
-    for e in range(10):
-        combat.create(
-            name=f.name(),
-            url=f.url(),
-            campaign_id=utill_rand_campId(),
-        )
     
