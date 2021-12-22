@@ -9,8 +9,13 @@ from validators import url
 
 def copylocalImg(src: str):
 
-    if isdir('.local') is False:
-        mkdir('.local')
+    dirname = '.local'
+
+    if isfile('.dev'):
+        dirname = '.local_dev'
+
+    if isdir(dirname) is False:
+        mkdir(dirname)
 
     if url(src):
         src = downloadImgHTTP(src)
@@ -24,7 +29,7 @@ def copylocalImg(src: str):
     hexVal = time_ns()
 
     fName = f"{hexVal}.{fileType}"
-    rPath = f'.local/{fName}'
+    rPath = f'{dirname}/{fName}'
     
     
     copy2(src, rPath)
@@ -40,13 +45,13 @@ def downloadImgHTTP(url_src:str):
     if req.status_code == 200:
         req.raw.decode_content = True
         fname = url_src.split('/')[-1]
+        dirname = '.local'
 
-        dest = f'.local/{fname}'
+        if isfile('.dev'):
+            dirname = '.local_dev'
+
+        dest = f'{dirname}/{fname}'
         with open(dest, 'wb') as f:
             copyfileobj(req.raw, f)
 
-        return dest
-        
-
-
-    
+    return dest

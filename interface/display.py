@@ -1,22 +1,52 @@
 from os import get_terminal_size
 from os.path import isfile
+from random import choice
 
-from rich import align, columns
-from rich.panel import Panel
+from data import Actions, Screen, Settings, screen
+from pyfiglet import Figlet
+from rich import align, columns, console
 from rich.columns import Columns
-from rich.text import Text
-from rich.rule import Rule
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.rule import Rule
+from rich.text import Text
+from treelib import Tree
+from treelib.exceptions import DuplicatedNodeIdError, NodeIDAbsentError
 
-from pyfiglet import Figlet
+def showTree(rootHex:str):
+    
+    actions = Actions().readAll()
+    screen = Screen()
+    tree = Tree()
 
-from data import Screen, Settings
+    tree.create_node(rootHex, rootHex)
 
-def displayScreen(hex):
+    elementsTitle = {}
+    for row in screen.readAll():
+        elementsTitle[row['hex']] = row['title']
+
+    i = 10
+    while i > 0:
+        for a in actions:
+            try:
+                t = "{} - {}".format(a['too'], elementsTitle[a['too']])
+                tree.create_node(t, a['too'], parent=a['from'])
+            except NodeIDAbsentError as err:
+                # print(err)
+                pass
+            except DuplicatedNodeIdError as err:
+                # print(err)
+                pass
+
+        i -= 1
+    tree.show()
+
+
+def displayScreen(hex, overRide=False):
     doc = Screen().getByHex(hex)
 
-    if Settings().get('displayServerSide') == False:
+    if (Settings().get('displayServerSide') == False) or (overRide):
         return doc
     
     con = Console()
@@ -32,7 +62,7 @@ def displayScreen(hex):
     pl_notes_panel = Panel(
         title='Players Notes',
         renderable=pl_string,
-        style="green"
+        border_style="green"
     )
 
     dm_string = doc['dm_notes']
@@ -44,7 +74,7 @@ def displayScreen(hex):
     dm_notes_panel = Panel(
         title='Dungeon Masters Notes ',
         renderable=dm_string,
-        style="red"
+        border_style="red"
     )
 
     tWidth = (tWidth / 2) - 1
@@ -84,6 +114,7 @@ def displayScreen(hex):
     )
 
     Console().print(cols)
+    showTree(hex)
 
     return doc
 

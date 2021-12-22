@@ -8,6 +8,10 @@ A tool that helps DMs to relay vital information using discord. In dnd campaign,
 
 the cli is method that you use to create, change and remove content. the commands tables is below.
 
+### dev mode (NEW)
+
+the new dev mode is a method of protecting your campgin and content when there is a bug or i am working on a shirey new feature ;-)
+
 #### Screen
 
 |command|arguments|notes|
@@ -29,7 +33,7 @@ the cli is method that you use to create, change and remove content. the command
 |---|---|---|
 |active|`id`|sets the active campign with in the system |
 |ls||this prints a table of campaigns in the system |
-|mk||creates a new campaign|
+|mk|`name`, `bio`|creates a new campaign|
 
 #### combat
 
@@ -39,6 +43,9 @@ the cli is method that you use to create, change and remove content. the command
 |mk|`name`, `url`|creates a combat element|
 |rm| `id`| removes combat by id|
 
+#### export
+
+exports a campaign to docx and pdf.
 ___
 
 ### Screen Details

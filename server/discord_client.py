@@ -25,7 +25,7 @@ class LocalClient(Client):
 
     async def on_message(self, message):
 
-        if settingsObj.get('chat History'):
+        if settingsObj.get('chatHistory'):
             history.create(
                 msg=message.content,
                 sender=message.author.name,

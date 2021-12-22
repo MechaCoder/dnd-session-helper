@@ -93,8 +93,7 @@ def displaySimpleNPC():
 
     pannel = RenderGroup(nameRow, genderRow, appearanceRow)
 
-    con = Console()
-    con.print(pannel)
+    return pannel
 
 
 def displayComplexNPC():

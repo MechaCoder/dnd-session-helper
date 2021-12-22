@@ -1,6 +1,7 @@
 from datetime import datetime
 from random import randint, choice
-from tinydb_base import DatabaseBase
+# from tinydb_base import DatabaseBase
+from .base import BaseData
 from .exception import SlugFormat
 
 def die(sides:int = 6):
@@ -50,17 +51,17 @@ def roller(slug:str = '1D6'):
     }
 
 
-class DiceHistory(DatabaseBase):
+class DiceHistory(BaseData):
 
-    def __init__(self, file: str = 'ds.json', table: str = 'dice_history', requiredKeys='slug,result,ts'):
-        super().__init__(file=file, table=table, requiredKeys=requiredKeys)
+    def __init__(self, table: str = 'dice_history', requiredKeys='slug,result,ts'):
+        super().__init__(table=table, requiredKeys=requiredKeys)
 
     def create(self, slug:str, result:int) -> int:
         ts = datetime.now().timestamp()
         row = {
             'slug': slug,
-            'result': result,
-            'ts': ts
+            'result': str(result),
+            'ts': str(ts)
         }
         return super().create(row)
 

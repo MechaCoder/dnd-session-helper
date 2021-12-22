@@ -15,6 +15,10 @@ pyperclip = "*"
 pyfiglet = "*"
 requests = "*"
 faker = "*"
+python-docx = "*"
+docx2pdf = "*"
+mdgen = "*"
+treelib = "*"
 
 [requires]
 python_version = "3.7"

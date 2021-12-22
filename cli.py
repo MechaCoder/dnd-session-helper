@@ -1,23 +1,29 @@
-from random import choice
 from datetime import date, datetime
 from os import remove
-
-from rich import console
-
-from data.campain import CampainData
-from click import prompt, Path
-from data import Screen, Campain, Settings, Combat, History
+from random import choice, random
+from re import T
+from time import sleep
 
 import click
-from rich.table import Table
-from rich.console import Console
-from rich import print, text
+from click import Path, prompt
+from click.decorators import argument
+from click.termui import confirm
+from faker.proxy import Faker
 from pyperclip import copy
+from rich import console, print, text
+from rich.console import Console
+from rich.table import Table
 
-from interface.tables import listScreens
+from data import Actions
+from data import CampainData as Campain
+from data import CombatData, History, Screen, Settings, campain
+from data.api import MonstersIndex
+from data.combat import NpcData
 from interface.display import displayScreen
-from interface.generate import displayComplexNPC
-
+from interface.export import export as exporter
+from interface.generate import displayComplexNPC, displaySimpleNPC
+from interface.tables import listScreens
+from interface.combat import CombatDisplay
 
 screenObj = Screen()
 campainObj = Campain()
@@ -59,11 +65,12 @@ def ls():
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cat(hex):
     """ displays a screen """
-    displayScreen(hex)
+    displayScreen(hex, overRide=False)
 
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cp(hex):
+    """ copys a screen data elemem to  the clipboard. """
     doc = screenObj.getByHex(hex)
     msg = "-play {} \n [dndsh:{}]".format(
         doc['soundtrack'],
@@ -129,6 +136,91 @@ def rm(hex):
     remove(row['picture'])
     screenObj.removeByHex(hex)
 
+@screen.group()
+def combat(): pass
+
+combat_ids = CombatData().readDoc_ids()
+
+@combat.command()
+@click.argument('combat_id', type=click.Choice(combat_ids) )
+def run(combat_id):
+    """runs a combat based on the combat id."""
+    combat_id = int(combat_id)
+    CombatDisplay(combat_id).run()
+    pass
+
+
+@combat.command()
+@click.argument('title', type=str)
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.option('--notes', type=str, default=1)
+def mk(title, hex, notes):
+    CombatData().create(
+        screenHex=hex,
+        title=title,
+        notes=notes
+    )
+    click.secho('a combat ({}) has been created for {}'.format(title, hex))
+    pass
+
+@combat.command()
+@click.argument('doc_id', type=click.Choice(CombatData().readDoc_ids()))
+def rm(doc_id):
+    doc_id = int(doc_id)
+    CombatData().removeById(doc_id=doc_id,)
+    click.secho('a combat has been removed.', fg='green')
+    pass
+
+# TODO: combat read and update
+
+@combat.command()
+@click.argument('screenHex', type=click.Choice(listofhexValues))
+def ls(screenhex):
+    
+    tbl = Table()
+    tbl.add_column('id')
+    tbl.add_column('title')
+    tbl.add_column('notes')
+    tbl.add_column('npcs')
+
+    npcs = NpcData()
+
+    for each in CombatData().readByHex(screenhex):
+        n = npcs.readByHex(each.doc_id)
+        
+        text = ""
+        for e in n:
+            text += '[red]{}({}) - {}[/red], '.format(e['name'], e.doc_id, e['index'])
+        tbl.add_row( str(each.doc_id), each['title'], each['notes'], text)
+
+    Console().print(tbl)
+
+@combat.group()
+def npc(): pass
+
+indexChoices = MonstersIndex().readAllIndex()
+randomName = Faker().first_name()
+combat_ids = CombatData().readDoc_ids()
+
+@npc.command()
+@click.argument('index', type=click.Choice(indexChoices))
+@click.argument('combat_id', type=click.Choice(combat_ids))
+@click.option('--name', type=str, default=randomName)
+def mk(name, index, combat_id):
+
+    NpcData().create(
+        name=name,
+        index=index,
+        combat_id=combat_id
+    )
+
+doc_ids = NpcData().readDoc_ids()
+
+@npc.command()
+@click.argument('doc_ids', type=click.Choice(doc_ids))
+def rm(doc_ids):
+    NpcData().removeById(doc_ids)
+
 @cli.group()
 def campaign(): pass
 
@@ -161,7 +253,7 @@ def ls():
 
     Console().print(tbl)
 
-campainidList = campainObj.listDoc_ids()
+campainidList = campainObj.readDoc_ids()
 
 @campaign.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
@@ -169,33 +261,6 @@ def active(campain_id):
     campain_id = int(campain_id)
     a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
-
-@cli.group()
-def combat(): pass
-
-@combat.command()
-@click.argument('name', type=str)
-@click.argument('url', type=str)
-def mk(name, url):
-    Combat().create(name=name, url=url)
-    click.secho('a new encounter has been created', fg='green')
-
-@combat.command()
-def ls():
-    tbl = Table()
-    tbl.add_column('doc id')
-    tbl.add_column('name')
-    tbl.add_column('url')
-    
-    for row in Combat().readAll():
-        tbl.add_row(str(row.doc_id) , row['name'], row['addr'])
-    Console().print(tbl)
-
-@combat.command()
-@click.argument('combat_id', type=click.Choice(Combat().readDoc_ids()))
-def rm(combat_id):
-    Combat().removeById(combat_id)
-    click.secho('combat deleted.', fg='red')
 
 @cli.group()
 def chat():
@@ -266,7 +331,50 @@ def gen():
 def complex():
     char = displayComplexNPC()
     Console().print(char)
-    
+
+@gen.command()
+def simple():
+    char = displaySimpleNPC()
+    Console().print(char)
+
+@cli.command()
+@click.option('--hours', type=int, default=0)
+@click.option('--minute', type=int, default=0)
+@click.argument('secounds', type=int, default=0)
+def countdown(hours:int, minute:int, secounds:int):
+    """creates a countdown timer for breaks and timeed activites"""
+    timerSecs = secounds
+    timerSecs += (minute * 60)
+    timerSecs += (hours * 3600)
+
+    with Console().status('countdown', spinner='clock') as status:
+        while timerSecs:
+            sleep(1)
+            status.update(f'counting down [{timerSecs}]')
+            timerSecs -= 1
+    pass
+
+@cli.command()
+@click.argument('campain_id', type=click.Choice(campainidList))
+def export(campain_id):
+    """exports a campagin to pdf and doc"""
+    campain_id = int(campain_id)
+    exporter(campain_id)
+
+@cli.group()
+def actions(): pass
+
+@actions.command()
+@click.argument('from_hex', type=click.Choice(listofhexValues))
+@click.argument('to_hex', type=click.Choice(listofhexValues))
+def mk(from_hex, to_hex):
+    """actions create links between between screens"""
+    Actions().create(
+        from_tag=from_hex,
+        to_tag=to_hex
+    )
+    Console().print("new action created")
+
 
 if __name__ == '__main__':
     cli()

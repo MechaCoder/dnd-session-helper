@@ -1,18 +1,19 @@
 from tinydb_base.getSet import GetSet, Factory, Query
+from .base import BaseGetSet
 
-class SettingsData(GetSet):
+class SettingsData(BaseGetSet):
     
-    def __init__(self, file: str = 'ds.json', table: str = 'settings'):
-        super().__init__(file=file, table=table)
+    def __init__(self, table: str = 'settings'):
+        super().__init__( table=table)
 
         if self.exist('Active Campain') == False:
             self.set('Active Campain', 1)
 
-        if self.exist('chatH istory') == False:
+        if self.exist('chatHistory') == False:
             self.set('chatHistory', False)
 
-        if self.exist('displayServerSide'):
-            self.set('displayServerSide', False)
+        if self.exist('displayServerSide') == False:
+            self.set('displayServerSide', True)
 
 
     def exist(self, tag:str):

@@ -1,9 +1,10 @@
 from tinydb.queries import Query
 from .screen import ScreenData
-from .settings import SettingsData
-from .campain import CampainData
-from .combat import EncounterData
 from .history import History
+from .actions import Actions
+from .campain import CampainData
+from .settings import SettingsData
+from .combat import CombatData
 
 import validators
 
@@ -61,23 +62,3 @@ class Screen(ScreenData):
     
 class Settings(SettingsData): pass 
 
-class Campain(CampainData):
-
-    def listDoc_ids(self):
-
-        ids = []
-        for row in self.readAll():
-            ids.append(
-                str(row.doc_id)
-            )
-        return ids
-
-class Combat(EncounterData): 
-
-    def create(self, name: str, url: str) -> int:
-
-        if validators.url(url) == False:
-            raise TypeError('url is not vaild url')
-
-        campaign_id = Settings().get('Active Campain')
-        return super().create(name, url, campaign_id)
