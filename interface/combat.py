@@ -127,7 +127,6 @@ class CombatDisplay():
                 x = Prompt.ask('::>>')
                 if x == 'exit':
                     exit()
-                
 
     def renderable(self, name:str):
         masterLayout = Layout(
@@ -189,6 +188,11 @@ class CombatDisplay():
         tbl1 = Table.grid()
         tbl1.add_row("Armour Class: ", str(profile['armor_class']) )
         tbl1.add_row("Hit Points: ", str(profile['hit_points']) + " (" + profile['hit_dice'] + ")")
+        speedStr = ""
+        for e in profile['speed'].keys():
+            speedStr += (e + "-" + profile['speed'][e])
+
+        tbl1.add_row("speed", speedStr)
 
         stats = Table(
             "str", "dex", "con", "int", "wis", "cha",
@@ -213,10 +217,6 @@ class CombatDisplay():
             )
 
         tbl2.add_row('proficiencies ', x)
-
-
-        tbl2.add_row('Damage Vulnerabilities', '')
-
         
 
         g = Group(
@@ -225,8 +225,7 @@ class CombatDisplay():
             tbl1,
             Rule(),
             stats,
-            # tbl2
+            tbl2
         )
 
         return Panel(g)
-        
