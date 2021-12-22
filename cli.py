@@ -23,6 +23,7 @@ from interface.display import displayScreen
 from interface.export import export as exporter
 from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.tables import listScreens
+from interface.combat import CombatDisplay
 
 screenObj = Screen()
 campainObj = Campain()
@@ -138,11 +139,14 @@ def rm(hex):
 @screen.group()
 def combat(): pass
 
-combat_ids = CombatData().readDoc_ids
+combat_ids = CombatData().readDoc_ids()
 
 @combat.command()
 @click.argument('combat_id', type=click.Choice(combat_ids) )
 def run(combat_id):
+    """runs a combat based on the combat id."""
+    combat_id = int(combat_id)
+    CombatDisplay(combat_id).run()
     pass
 
 
