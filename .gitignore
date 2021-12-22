@@ -9,4 +9,4 @@ test.*
 *.docx
 *.pyc
 *.json
-.play.*
+.play*.*
