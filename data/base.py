@@ -16,7 +16,7 @@ def dsfile():
 
 class BaseData(DatabaseBase):
 
-    def __init__(self, table: str = ..., requiredKeys='title:str'):
+    def __init__(self, table: str = 'BaseData', requiredKeys='title:str'):
         file = dsfile()
         super().__init__(file=file, table=table, requiredKeys=requiredKeys)
 
@@ -30,6 +30,6 @@ class BaseData(DatabaseBase):
 
 class BaseGetSet(GetSet):
 
-    def __init__(self, table: str = ...):
+    def __init__(self, table: str = 'getSet'):
         file = dsfile()
         super().__init__(file=file, table=table)
