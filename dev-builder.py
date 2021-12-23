@@ -8,9 +8,11 @@ from os.path import isdir, isfile
 from glob import glob
 from random import randint
 
-from data import Campain, Screen, Actions
+from data import CampainData as Campain, Screen, Actions, Players
 from rich import print
 from rich.console import Console
+
+from data.combat import CombatData, NpcData, MonstersIndex
 
 con = Console()
 
@@ -56,7 +58,6 @@ with con.status("starting build") as s:
     f.add_provider(MarkdownPostProvider)
 
     s.update("createing campigns")
-
     for e in range(10):
         cam.create(
             f.name(),
@@ -83,4 +84,29 @@ with con.status("starting build") as s:
         except Exception as err:
             pass
 
-    
+    s.update('createing players')
+    for e in range(50):
+        randCampaign = choice(cam.readAll())
+        Players().create(
+            Faker().name(),
+            randCampaign.doc_id,
+        )
+
+    s.update('createing combat')
+    for e in range(50):
+        obj = choice(Screen().readAll())
+        CombatData().create(
+            obj['hex'],
+            Faker().name(),
+            Faker().text()
+        )
+
+    s.update('create npcs')
+    for e in range(50):
+        rand = choice(CombatData().readAll())
+        randMonster = choice(MonstersIndex().readAll())
+        NpcData().create(
+            Faker().name(),
+            randMonster['index'],
+            rand.doc_id
+        )

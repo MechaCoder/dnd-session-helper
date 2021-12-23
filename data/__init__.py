@@ -5,6 +5,7 @@ from .actions import Actions
 from .campain import CampainData
 from .settings import SettingsData
 from .combat import CombatData
+from .players import Players
 
 import validators
 
@@ -51,7 +52,7 @@ class Screen(ScreenData):
             value=note
         )
 
-    def readAll(self) -> list:
+    def readAll(self):
         setting = SettingsData().get('Active Campain')
         db = self.createObj()
         data = db.tbl.search(Query().campain == setting)
@@ -59,6 +60,12 @@ class Screen(ScreenData):
 
         return data
 
+    def readByHex(self, hex:str):
+
+        db = self.createObj()
+        row = db.tbl.get(Query().hex == hex)
+        db.close()
+        return row
     
 class Settings(SettingsData): pass 
 

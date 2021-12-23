@@ -1,13 +1,15 @@
 from click.termui import confirm, secho
 from data.api import getProfile
 from data.combat import CombatData, NpcData
+from data.players import Players
+from data import Screen, screen
 from data.dice import roller
 from rich import prompt
 from rich.console import Console, Group
 from rich.layout import Layout
 from rich.markdown import Markdown
 from rich.panel import Panel
-from rich.prompt import Prompt
+from rich.prompt import Prompt, IntPrompt
 from rich.rule import Rule
 from rich.table import Table
 
@@ -53,6 +55,7 @@ def modifiers(score):
 
 def combat_data(combat_id):
     combat_data = CombatData().readById(combat_id)
+    screen_data = Screen().readByHex(combat_data['screen.hex'])
     npcs_data = NpcData().readByHex(combat_id=combat_id)
 
     npcProfiles = {}
@@ -67,28 +70,19 @@ def combat_data(combat_id):
     # get players
     pcProfiles = {}
 
-    if False:
-        while True:
+    for e in Players().readByCampaignId(screen_data['campain']):
 
-            name = prompt('enter players name', type=str)
-            if name in npcProfiles.keys():
-                secho('plays name already exists enter a diffrent name')
-                continue
+        d = {
+            'initiative': IntPrompt.ask(f'enter init for ' + e['name']),
+            'combat_type': 'pc'
+        }
 
-            init = prompt(f'enter {name} Initiative', type=int)
+        pcProfiles[e['name']] = d
 
-            pcProfiles[name] = {
-                'initiative': init,
-                'combat_type': 'pc'
-            }
-
-            if confirm('add another player', default=True) is False:
-                break
-       
+    
     # sorting player's
     order = []
     for x in npcProfiles:
-        # print(npcProfiles[x])
         order.append(
             (x, npcProfiles[x]['initiative'], 'npc')
         )
@@ -160,16 +154,18 @@ class CombatDisplay():
                 turn = '👈'
 
             type = ''
-            if each[2] == 'pl':
-                type = ':Person:'
-
+            if each[2] == 'pc':
+                type = 'player'
             tbl.add_row(each[0], str(each[1]), type, turn)
 
         return tbl
 
     def _screenDisplayProfile(self, name:str):
 
-        profile = self.data['npcs'][name]
+        try:
+            profile = self.data['npcs'][name]
+        except KeyError as err:
+            return ""
 
         txt = """
 # {}

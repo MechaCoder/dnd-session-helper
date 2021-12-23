@@ -23,3 +23,11 @@ class CampainData(BaseData):
         }
         
         return super().create(row)
+
+    def listDoc_ids(self):
+
+        data = []
+        for e in self.readAll():
+            data.append(e.doc_id)
+
+        return data

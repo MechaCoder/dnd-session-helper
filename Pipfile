@@ -23,6 +23,7 @@ nose2 = "*"
 
 [scripts]
 test = "python -m nose2"
+build_dev = "python dev-builder.py"
 
 [requires]
 python_version = "3.7"
