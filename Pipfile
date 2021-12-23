@@ -19,6 +19,10 @@ python-docx = "*"
 docx2pdf = "*"
 mdgen = "*"
 treelib = "*"
+nose2 = "*"
+
+[scripts]
+test = "python -m nose2"
 
 [requires]
 python_version = "3.7"
