@@ -53,7 +53,7 @@ ___
 A Screen is a snapshot; this can be an NPC (non-playable character), giving the party a letter, a menu. The screen is made up of the following;
 
 - hex; the hex is a four-digit code, which is made up letters and numbers and is used to fetch a screen.
-- soundtrack; this soundtrack is a `Groovy` compatible URL this talked about later.
+- soundtrack; this can now be a youtube or any link that can be embeded into disord
 - picture; this can be an image path on your local system or a URL.
 - title; this title is something that helps you remember what the content is.
 - dm notes; these note that will appear on the server screen  

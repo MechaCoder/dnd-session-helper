@@ -72,6 +72,10 @@ class LocalClient(Client):
                     file=discord.File(doc['picture']) 
                 )
 
+            await message.channel.send(
+                doc['soundtrack']
+            )
+
             for paragraph in doc['pl_notes'].split('\n'):
 
                 if paragraph == '':
@@ -99,7 +103,6 @@ class LocalClient(Client):
                     
                     msg = "dice roll history \n ```"
                     for row in DiceHistory().readAll():
-                        # print(row)
                         msg += 'at {}, a user requested {} and got {} \n'.format(
                             str(row['ts']),
                             row['slug'],
