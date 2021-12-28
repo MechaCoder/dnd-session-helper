@@ -20,6 +20,7 @@ docx2pdf = "*"
 mdgen = "*"
 treelib = "*"
 nose2 = "*"
+playsound = "*"
 
 [scripts]
 test = "python -m nose2"

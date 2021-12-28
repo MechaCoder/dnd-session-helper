@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ceae47fc6b86e09b062601d393c137fe408571b79d40181c05ba9093afda94ef"
+            "sha256": "30f1352d7d55719044bdac5355d4955fcb4ed1632d3af9ff50558f6cf1757297"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -67,10 +67,10 @@
         },
         "attrs": {
             "hashes": [
-                "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1",
-                "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"
+                "sha256:50f3c9b216dc9021042f71b392859a773b904ce1a029077f58f6598272432045",
+                "sha256:8f7335278dedd26b58c38e006338242cc0977f06d51579b2b8b87b9b33bff66c"
             ],
-            "version": "==21.2.0"
+            "version": "==21.3.0"
         },
         "certifi": {
             "hashes": [
@@ -272,11 +272,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:3163c84866cf118ac5329a802e046b0f729528ce62ebb2806b626e0badbb6ff3",
-                "sha256:530690ad12a2a054071af95fc8a354c5fd57b5e7707053a9662f40f14a87b68e"
+                "sha256:89c359e153f6a27820ff1d491e851018064dd65731f7894e226f93e2aa980655",
+                "sha256:ee29deb5174a8bd2e3a1be2f43d9505201d267d383a97ebc67715d12bb386e47"
             ],
             "index": "pypi",
-            "version": "==10.0.0"
+            "version": "==11.1.0"
         },
         "future": {
             "hashes": [
@@ -458,6 +458,13 @@
             "index": "pypi",
             "version": "==0.10.0"
         },
+        "playsound": {
+            "hashes": [
+                "sha256:cc6ed11d773034b0ef624e6bb4bf50f4b76b8414a59ce6d38afb89b423297ced"
+            ],
+            "index": "pypi",
+            "version": "==1.3.0"
+        },
         "pycparser": {
             "hashes": [
                 "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9",
@@ -578,10 +585,10 @@
         },
         "tinydb-baseclass": {
             "hashes": [
-                "sha256:1b449e3ec6d66a14084e92b9dc8c0399c11ddeeab160fd53fec82348ede292df"
+                "sha256:0fdb46aff8bc4b8646932f1f9d3697d7be2afc24a4586a8f90188509213b8f9d"
             ],
             "index": "pypi",
-            "version": "==0.5.0"
+            "version": "==1.0.0"
         },
         "tqdm": {
             "hashes": [

@@ -3,14 +3,18 @@ from os.path import isfile
 from click.decorators import group
 from discord import Client, File
 import discord
+from discord.channel import DMChannel, TextChannel
 from discord.gateway import DiscordClientWebSocketResponse
 from rich import print
 from rich import table
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.table import Table
+from playsound import playsound
+from threading import Thread
+from os import popen
 
-from data import Screen, History, Settings, settings
+from data import Screen, History, Settings, settings, Players
 from interface.display import displayScreen
 from data.dice import roller, DiceHistory
 
@@ -35,6 +39,11 @@ class LocalClient(Client):
         
         if message.author == self.user:
             return
+
+        if isinstance(message.channel, DMChannel):
+            #if a user dm's the bot
+            await self._dm_controller(message)
+            pass
 
         if '[dndsh' in message.content:
             await self._message_content_tags(message)
@@ -129,4 +138,39 @@ class LocalClient(Client):
                     )
 
         return 
+
+    async def _dm_controller(self, message):
+
+        player = Players()
+        activeCampaign = Settings().get('Active Campain')
+
+        # print(message.content)
+
+        if 'xcard' in message.content:
+            await message.channel.send('I hear you, the DM has been informed')
+
+            wav = lambda: playsound('72125__kizilsungur__sweetalertsound1.wav')
+
+            popen("notify-send 'X-card' '{} used the x-card!'".format(message.author.name) )
+            
+            t = Thread(target=wav, args=())
+            t.start()
+
+        
+        if player.playerExistsInCampaign(message.author.name, activeCampaign) is False:
+            await message.channel.send(
+                f'hey {message.author.name}, let me save your information.'
+            )
+
+            pid = player.create(
+                message.author.name,
+                activeCampaign
+            )
+
+            await message.channel.send(
+                'saved...'
+            )
+
+        
+        pass
 
