@@ -21,3 +21,14 @@ class Players(BaseData):
         db.close()
 
         return data
+
+    def playerExistsInCampaign(self, name:str, campagin:int):
+
+        db = self.createObj()
+        qry = Query()
+        data = db.tbl.contains(
+            (qry.name == name) & (qry.campagin == campagin)
+        )
+        db.close()
+
+        return data

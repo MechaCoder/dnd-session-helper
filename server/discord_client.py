@@ -3,16 +3,21 @@ from os.path import isfile
 from click.decorators import group
 from discord import Client, File
 import discord
+from discord.channel import DMChannel, TextChannel
 from discord.gateway import DiscordClientWebSocketResponse
 from rich import print
 from rich import table
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.table import Table
+from playsound import playsound
+from threading import Thread
+from os import popen
 
-from data import Screen, History, Settings, settings
+from data import Screen, History, Settings, settings, Players
 from interface.display import displayScreen
 from data.dice import roller, DiceHistory
+from server.notfications import pushNoteCards
 
 history = History()
 settingsObj = Settings()
@@ -35,6 +40,11 @@ class LocalClient(Client):
         
         if message.author == self.user:
             return
+
+        if isinstance(message.channel, DMChannel):
+            #if a user dm's the bot
+            await self._dm_controller(message)
+            pass
 
         if '[dndsh' in message.content:
             await self._message_content_tags(message)
@@ -129,4 +139,55 @@ class LocalClient(Client):
                     )
 
         return 
+
+    async def _dm_controller(self, message):
+
+        player = Players()
+        activeCampaign = Settings().get('Active Campain')
+
+
+        if 'xcard' in message.content.lower():
+
+            pushNoteCards(
+                message.author.name,
+                'x-Card'
+            )
+
+        if 'rewind' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'rewind'
+            )
+
+        if 'fast-forward' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'fast forward'
+            )
+
+        if 'pause' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'pause'
+            )
+
+        
+
+        
+        if player.playerExistsInCampaign(message.author.name, activeCampaign) is False:
+            await message.channel.send(
+                f'hey {message.author.name}, let me save your information.'
+            )
+
+            pid = player.create(
+                message.author.name,
+                activeCampaign
+            )
+
+            await message.channel.send(
+                'saved...'
+            )
+
+        
+        pass
 
