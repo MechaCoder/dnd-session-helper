@@ -17,6 +17,7 @@ from os import popen
 from data import Screen, History, Settings, settings, Players
 from interface.display import displayScreen
 from data.dice import roller, DiceHistory
+from server.notfications import pushNoteCards
 
 history = History()
 settingsObj = Settings()
@@ -144,17 +145,33 @@ class LocalClient(Client):
         player = Players()
         activeCampaign = Settings().get('Active Campain')
 
-        # print(message.content)
 
-        if 'xcard' in message.content:
-            await message.channel.send('I hear you, the DM has been informed')
+        if 'xcard' in message.content.lower():
 
-            wav = lambda: playsound('72125__kizilsungur__sweetalertsound1.wav')
+            pushNoteCards(
+                message.author.name,
+                'x-Card'
+            )
 
-            popen("notify-send 'X-card' '{} used the x-card!'".format(message.author.name) )
-            
-            t = Thread(target=wav, args=())
-            t.start()
+        if 'rewind' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'rewind'
+            )
+
+        if 'fast forward' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'fast forward'
+            )
+
+        if 'pause' in message.content.lower():
+            pushNoteCards(
+                message.author.name,
+                'pause'
+            )
+
+        
 
         
         if player.playerExistsInCampaign(message.author.name, activeCampaign) is False:
