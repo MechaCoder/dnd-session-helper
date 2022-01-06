@@ -159,7 +159,7 @@ class LocalClient(Client):
                 'rewind'
             )
 
-        if 'fast forward' in message.content.lower():
+        if 'fast-forward' in message.content.lower():
             pushNoteCards(
                 message.author.name,
                 'fast forward'
