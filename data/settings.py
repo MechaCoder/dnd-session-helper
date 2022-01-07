@@ -15,6 +15,9 @@ class SettingsData(BaseGetSet):
         if self.exist('displayServerSide') == False:
             self.set('displayServerSide', True)
 
+        if self.exist('screenTemplate') == False:
+            self.set('screenTemplate', '')
+
 
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)
@@ -34,6 +37,9 @@ class SettingsData(BaseGetSet):
         
         tags = []
         for row in db.tbl.all():
+            if row['tag'] == 'screenTemplate':
+                continue
+            
             tags.append(
                 row['tag']
             )

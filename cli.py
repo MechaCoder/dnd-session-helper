@@ -7,7 +7,7 @@ from time import sleep
 import click
 from click import Path, prompt
 from click.decorators import argument
-from click.termui import confirm
+from click.termui import confirm, edit, secho
 from faker.proxy import Faker
 from pyperclip import copy
 from rich import console, print, text
@@ -38,6 +38,23 @@ def screen():
     pass
 
 @screen.command()
+def template():
+    "edit the dm notes template used."
+
+    setttingsObj = Settings()
+    oldtemplate = setttingsObj.get('screenTemplate')
+    newtemplate = edit(oldtemplate)
+
+    if newtemplate == None:
+        newtemplate = ''
+    
+    setttingsObj.set('screenTemplate', newtemplate)
+
+
+    secho('template changed')
+
+
+@screen.command()
 @click.argument('title', type=str)
 @click.option('--pic', '-p', type=str, prompt=True, help='this is a local img that apt repesents the screen')
 @click.option('--soundtrack', '-s', type=str, prompt=True, help='this is the soundtrack to the sceen')
@@ -46,6 +63,9 @@ def screen():
 # @click.option('--campain',  type=click.Choice(campainidList), default=0)
 def mk(title, pic, soundtrack, dm_notes, pl_notes):
     """ added a new screen. """
+    if dm_notes == '':
+        dm_notes = Settings().get('screenTemplate')
+
     newScreen = screenObj.create(
         soundtrack=soundtrack, 
         picture=pic, 
@@ -171,7 +191,6 @@ def rm(doc_id):
     click.secho('a combat has been removed.', fg='green')
     pass
 
-# TODO: combat read and update
 
 @combat.command()
 @click.argument('screenHex', type=click.Choice(listofhexValues))
