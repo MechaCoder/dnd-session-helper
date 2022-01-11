@@ -24,12 +24,17 @@ def showTree(rootHex:str):
 
     elementsTitle = {}
     for row in screen.readAll():
-        elementsTitle[row['hex']] = row['title']
+        try:
+            elementsTitle[row['hex']] = row['title']
+        except KeyError as err:
+            pass
 
     i = 10
     while i > 0:
         for a in actions:
             try:
+                if a == None:
+                    continue
                 t = "{} - {}".format(a['too'], elementsTitle[a['too']])
                 tree.create_node(t, a['too'], parent=a['from'])
             except NodeIDAbsentError as err:
@@ -37,6 +42,8 @@ def showTree(rootHex:str):
                 pass
             except DuplicatedNodeIdError as err:
                 # print(err)
+                pass
+            except KeyError as err:
                 pass
 
         i -= 1

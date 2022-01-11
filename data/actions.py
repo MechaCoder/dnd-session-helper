@@ -48,3 +48,12 @@ class Actions(BaseData):
         obj.close()
 
         return data
+
+    def removeByHex(self, hex:str):
+
+        obj = self.createObj()
+        obj.tbl.remove(Query()['from']==hex)
+        obj.tbl.remove(Query()['too']==hex)
+        obj.close()
+
+        return True

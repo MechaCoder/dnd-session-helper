@@ -158,6 +158,7 @@ def rm(hex):
     row = screenObj.getByHex(hex)
     remove(row['picture'])
     screenObj.removeByHex(hex)
+    Actions().removeByHex(hex)
 
 @screen.group()
 def combat(): pass
