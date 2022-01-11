@@ -160,6 +160,16 @@ def rm(hex):
     screenObj.removeByHex(hex)
     Actions().removeByHex(hex)
 
+@screen.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+@click.argument('title', type=str)
+def cp(hex, title):
+    row = screenObj.copyScreen(
+        hex,
+        title
+    )
+    secho('copy of {} has been made and the hex is {}'.format(hex, row[1]), fg='green')
+
 @screen.group()
 def combat(): pass
 

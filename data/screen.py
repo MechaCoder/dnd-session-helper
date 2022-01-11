@@ -132,3 +132,19 @@ class ScreenData(BaseData):
         
         return True
 
+    def copyScreen(self, hex:str, title:str):
+
+        if self.exists('hex', hex) == False:
+            raise DataException('hex dose not excist')
+
+        data = self.getByHex(hex)
+
+        return self.create(
+            soundtrack=data['soundtrack'],
+            picture=data['picture'],
+            campain=data['campain'],
+            dm_notes=data['dm_notes'],
+            pl_notes=data['pl_notes'],
+            title=title
+        )
+

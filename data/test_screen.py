@@ -1,7 +1,9 @@
-from re import S
 from unittest import TestCase
+from random import choice
 from faker import Faker
 from data.screen import ScreenData
+
+
 
 class Test_screen(TestCase):
 
@@ -28,3 +30,9 @@ class Test_screen(TestCase):
             id[1],
             str
         )
+
+    def test_copyScreen(self):
+
+        obj = ScreenData()
+        doc = choice(obj.readAll())
+        obj.copyScreen(doc['hex'], Faker().name())
