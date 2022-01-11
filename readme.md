@@ -22,7 +22,7 @@ the new dev mode is a method of protecting your campgin and content when there i
 |mk|`title`, `--pic`, `--soundtrack`, `--dm_notes`, `--pl_notes`|this creates a new screen|
 |rm|`hex`| remove screen by hex|
 |update|||
-|-- notes|`hex`, `dm|pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
+|-- notes|`hex`, `dm` - `pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
 |-- picture|`hex`,`url|path`|this will allow you to update the img that a hex uses|
 |-- soundtrack|`hex`,`url|path`|this will allow you to update the img that a hex uses|
 |-- title|`hex`, `new title`|this will allow you to update the title|
@@ -45,8 +45,7 @@ the new dev mode is a method of protecting your campgin and content when there i
 
 #### export
 
-exports a campaign to docx and pdf.
-___
+exports a campaign to docx and pdf. this is done by getting all information from a campaign id.
 
 ### Screen Details
 

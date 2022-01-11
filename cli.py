@@ -1,16 +1,12 @@
-from datetime import date, datetime
+from datetime import datetime
 from os import remove
-from random import choice, random
-from re import T
 from time import sleep
 
 import click
-from click import Path, prompt
-from click.decorators import argument
-from click.termui import confirm, edit, secho
+from click.termui import edit, secho
 from faker.proxy import Faker
 from pyperclip import copy
-from rich import console, print, text
+from rich import print
 from rich.console import Console
 from rich.table import Table
 
@@ -19,11 +15,11 @@ from data import CampainData as Campain
 from data import CombatData, History, Screen, Settings, campain
 from data.api import MonstersIndex
 from data.combat import NpcData
+from interface.combat import CombatDisplay
 from interface.display import displayScreen
 from interface.export import export as exporter
 from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.tables import listScreens
-from interface.combat import CombatDisplay
 
 screenObj = Screen()
 campainObj = Campain()
@@ -108,6 +104,7 @@ def update():
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.argument('title', type=str)
 def title(hex, title):
+    """updates the title"""
     screenObj.update_title(hex=hex, title=title)
     click.secho('title have been updated', fg='green')
 
@@ -115,13 +112,16 @@ def title(hex, title):
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.argument('soundtrack', type=str)
 def soundtrack(hex, soundtrack): 
+    """updates the soundtrack"""
     screenObj.update_soundtrack(hex=hex, soundtrack=soundtrack)
     click.secho('soundtrack have been updated', fg='green')
 
 @update.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.argument('picture', type=click.Path(exists=True, file_okay=True))
-def picture(hex, picture): 
+def picture(hex, picture):
+    """ updates the picture for a screen"""
+    # TODO: dose the old picture get deleted
     screenObj.update_picture(hex=hex, picture=picture)
     click.secho('picture have been updated', fg='green')
     pass
@@ -130,6 +130,7 @@ def picture(hex, picture):
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.argument('ntype', type=click.Choice(['dm', 'pl']), default='dm')
 def notes(hex, ntype):
+    """update the screens nots"""
     
     doc = screenObj.getByHex(hex)
 
@@ -150,6 +151,8 @@ def notes(hex, ntype):
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
 def rm(hex):
+    """removes a screen by hex"""
+
     if click.confirm('are you sure you to delete {}?'.format(hex)) == False:
         return
     row = screenObj.getByHex(hex)
@@ -175,6 +178,7 @@ def run(combat_id):
 @click.argument('hex', type=click.Choice(listofhexValues))
 @click.option('--notes', type=str, default=1)
 def mk(title, hex, notes):
+    """creates a combat"""
     CombatData().create(
         screenHex=hex,
         title=title,
@@ -186,6 +190,7 @@ def mk(title, hex, notes):
 @combat.command()
 @click.argument('doc_id', type=click.Choice(CombatData().readDoc_ids()))
 def rm(doc_id):
+    """removes a combat"""
     doc_id = int(doc_id)
     CombatData().removeById(doc_id=doc_id,)
     click.secho('a combat has been removed.', fg='green')
@@ -195,6 +200,7 @@ def rm(doc_id):
 @combat.command()
 @click.argument('screenHex', type=click.Choice(listofhexValues))
 def ls(screenhex):
+    """lists the comabats attached to a screen"""
     
     tbl = Table()
     tbl.add_column('id')
@@ -226,6 +232,7 @@ combat_ids = CombatData().readDoc_ids()
 @click.argument('combat_id', type=click.Choice(combat_ids))
 @click.option('--name', type=str, default=randomName)
 def mk(name, index, combat_id):
+    """ creates a npc"""
 
     NpcData().create(
         name=name,
@@ -238,6 +245,7 @@ doc_ids = NpcData().readDoc_ids()
 @npc.command()
 @click.argument('doc_ids', type=click.Choice(doc_ids))
 def rm(doc_ids):
+    """ removes npc """
     NpcData().removeById(doc_ids)
 
 @cli.group()
@@ -247,6 +255,7 @@ def campaign(): pass
 @click.argument('title', type=str)
 @click.option('--bio', type=str, default='')
 def mk(title, bio):
+    """ creates a new campaign"""
     Campain().create(
         title=title,
         bio=bio
@@ -254,6 +263,7 @@ def mk(title, bio):
 
 @campaign.command()
 def ls():
+    """lists all campagns"""
     tbl = Table()
     tbl.add_column('id')
     tbl.add_column('title')
@@ -277,17 +287,19 @@ campainidList = campainObj.readDoc_ids()
 @campaign.command()
 @click.argument('campain_id', type=click.Choice(campainidList))
 def active(campain_id):
+    """ changes the active campaign id"""
     campain_id = int(campain_id)
     a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
 
 @cli.group()
 def chat():
-    """ this is a interaction """
+    """ this is a interaction on the discord server. """
     pass
 
 @chat.command()
 def read():
+    """ this is allows dm to read the recourd"""
     hist = History()
 
     tbl = Table()
@@ -339,6 +351,7 @@ def get():
 @click.argument('tag', type=click.Choice(Settings().readTags()))
 @click.argument('val', type=any)
 def set(tag, val):
+    """set a setting from excistings"""
     Settings().set(tag, val)
 
 @cli.group()
@@ -348,11 +361,13 @@ def gen():
 
 @gen.command()
 def complex():
+    """ gen a complex profile on NPC"""
     char = displayComplexNPC()
     Console().print(char)
 
 @gen.command()
 def simple():
+    """ gen a simple NPC"""
     char = displaySimpleNPC()
     Console().print(char)
 
@@ -368,7 +383,7 @@ def countdown(hours:int, minute:int, secounds:int):
 
     with Console().status('countdown', spinner='clock') as status:
         while timerSecs:
-            sleep(1)
+            sleep(1)    
             status.update(f'counting down [{timerSecs}]')
             timerSecs -= 1
     pass
@@ -381,7 +396,9 @@ def export(campain_id):
     exporter(campain_id)
 
 @cli.group()
-def actions(): pass
+def actions():
+    """this enables the dm to create connections """ 
+    pass
 
 @actions.command()
 @click.argument('from_hex', type=click.Choice(listofhexValues))
