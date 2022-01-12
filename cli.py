@@ -422,6 +422,12 @@ def mk(from_hex, to_hex):
     )
     Console().print("new action created")
 
+@actions.command()
+@click.argument('from_hex', type=click.Choice(listofhexValues))
+@click.argument('to_hex', type=click.Choice(listofhexValues))
+def rm(from_hex, to_hex):
+    Actions().removeAllByHex(from_hex=from_hex, to_hex=to_hex)
+    secho('actions have been deleted')
 
 if __name__ == '__main__':
     cli()
