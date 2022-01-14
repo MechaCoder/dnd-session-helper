@@ -1,10 +1,9 @@
 from os import get_terminal_size
 from os.path import isfile
 from random import choice
+from PIL import Image
 
-from data import Actions, Screen, Settings, screen
-from pyfiglet import Figlet
-from rich import align, columns, console
+from data import Actions, Screen, Settings
 from rich.columns import Columns
 from rich.console import Console
 from rich.markdown import Markdown
@@ -95,10 +94,6 @@ def displayScreen(hex, overRide=False):
         width=int(tWidth),
     )
 
-    title = Figlet(
-        font='computer',
-    )
-
     con.print(Text(
         doc['title'],
         justify='center'
@@ -112,9 +107,14 @@ def displayScreen(hex, overRide=False):
     if isfile(doc['picture']):
         e = ':thumbs_up:'
 
-    con.print(
-        'picture - ', doc['picture'], e
-    )
+
+    try:
+        img = Image.open(doc['picture'])
+        img.show()
+    except Exception:
+        con.print(
+            'picture - ', doc['picture'], e
+        )
 
     con.print(
         'soundtrack - ', doc['soundtrack']
