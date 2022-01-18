@@ -15,8 +15,8 @@ from threading import Thread
 from os import popen
 
 from data import Screen, History, Settings, settings, Players
-from interface.display import displayScreen
 from data.dice import roller, DiceHistory
+from interface.display import displayScreen
 from server.notfications import pushNoteCards
 
 history = History()
@@ -75,7 +75,10 @@ class LocalClient(Client):
 
             
             Console().clear()
-            doc = displayScreen(hex)
+            doc = Screen().getByHex(hex)
+            if Settings().get('displayServerSide'):
+                s = displayScreen(hex)
+                Console().print(s)
 
             if isfile(doc['picture']) or doc['picture'] == '':
                 await message.channel.send(

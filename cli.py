@@ -81,7 +81,8 @@ def ls():
 @click.argument('hex', type=click.Choice(listofhexValues))
 def cat(hex):
     """ displays a screen """
-    displayScreen(hex, overRide=False)
+    s = displayScreen(hex)
+    Console().print(s)
 
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
