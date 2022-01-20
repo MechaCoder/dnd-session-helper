@@ -14,6 +14,7 @@ from requests.exceptions import ConnectionError
 from .commons import copylocalImg
 from .exception import DataException
 from .settings import SettingsData
+from .segment import Segment
 
 def _mkHex(l:int=8):
     pool = choices(population=(digits + ascii_lowercase), k=500)
@@ -31,7 +32,7 @@ class ScreenData(BaseData):
         exists = db.tbl.contains(Query().hex == hex)
         db.close()
 
-        return False
+        return exists
 
     def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = ''):
         row = {}
@@ -93,10 +94,16 @@ class ScreenData(BaseData):
         return (created_id, row['hex'])
 
     def getByHex(self, hexval:str):
+
+        seg = Segment()
         
         db = self.createObj()
         row = db.tbl.get(Query().hex == hexval)
         db.close()
+
+        row['dm_notes'] = seg.addSegmentToString(row['dm_notes'])
+        row['pl_notes'] = seg.addSegmentToString(row['pl_notes'])
+
         return row
 
     def getListOfHexs(self):

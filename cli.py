@@ -12,11 +12,12 @@ from rich.table import Table
 
 from data import Actions
 from data import CampainData as Campain
-from data import CombatData, History, Screen, Settings, campain
+from data import CombatData, History, Screen, Settings
 from data.api import MonstersIndex
 from data.combat import NpcData
+from data.segment import Segment
 from interface.combat import CombatDisplay
-from interface.display import displayScreen
+from interface.display import displayScreen, tableOfSegment
 from interface.export import export as exporter
 from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.tables import listScreens
@@ -122,7 +123,6 @@ def soundtrack(hex, soundtrack):
 @click.argument('picture', type=click.Path(exists=True, file_okay=True))
 def picture(hex, picture):
     """ updates the picture for a screen"""
-    # TODO: dose the old picture get deleted
     screenObj.update_picture(hex=hex, picture=picture)
     click.secho('picture have been updated', fg='green')
     pass
@@ -172,6 +172,48 @@ def cp(hex, title):
     secho('copy of {} has been made and the hex is {}'.format(hex, row[1]), fg='green')
 
 @screen.group()
+def segment(): pass
+
+segmentsHexList = Segment().readAllHex()
+
+@segment.command()
+@click.argument('title', type=str)
+def mk(title):
+    """creates to segement of text that can be resused though out a campaign"""
+    cont = click.edit("")
+    Segment().create(
+        title=title,
+        content=cont,
+        campaign=Settings().get('Active Campain')
+)
+
+@segment.command()
+def ls():
+    """lists out"""
+    tbl = tableOfSegment()
+    Console().print(tbl)
+
+@segment.command()
+@click.argument('hex', type=click.Choice(segmentsHexList))
+def edit(hex): 
+    """updateing the content"""
+    
+    doc = Segment().readByHex(hex)
+    e = click.edit(doc['text'])
+
+    if e is None:
+        return
+
+    Segment().updateById(doc.doc_id, 'text', e)
+    click.secho('Segment has been updated')
+
+@segment.command()
+@click.argument('hex', type=click.Choice(segmentsHexList))
+def rm(hex):
+    Segment().removeByHex(hex)
+
+
+@screen.group()
 def combat(): pass
 
 combat_ids = CombatData().readDoc_ids()
@@ -183,7 +225,6 @@ def run(combat_id):
     combat_id = int(combat_id)
     CombatDisplay(combat_id).run()
     pass
-
 
 @combat.command()
 @click.argument('title', type=str)

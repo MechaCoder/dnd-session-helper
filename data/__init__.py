@@ -6,6 +6,7 @@ from .campain import CampainData
 from .settings import SettingsData
 from .combat import CombatData
 from .players import Players
+from .segment import Segment
 
 import validators
 

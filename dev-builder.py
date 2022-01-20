@@ -1,4 +1,3 @@
-from posixpath import join
 from random import choice
 from faker import Faker
 from mdgen import MarkdownPostProvider
@@ -8,7 +7,7 @@ from os.path import isdir, isfile
 from glob import glob
 from random import randint
 
-from data import CampainData as Campain, Screen, Actions, Players
+from data import CampainData as Campain, Screen, Actions, Players, Segment
 from rich import print
 from rich.console import Console
 
@@ -110,3 +109,13 @@ with con.status("starting build") as s:
             randMonster['index'],
             rand.doc_id
         )
+
+    s.update('makeing campagin segments')
+    for each in cam.readAll():
+        for e in range(1,5):
+            Segment().create(
+                Faker().name(),
+                Faker().text(),
+                each.doc_id
+            )
+

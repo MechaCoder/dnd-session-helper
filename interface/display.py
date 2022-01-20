@@ -3,7 +3,7 @@ from os.path import isfile
 from random import choice
 from PIL import Image
 
-from data import Actions, Screen, Settings, CampainData
+from data import Actions, Screen, Settings, CampainData, Segment
 from rich.columns import Columns
 from rich.console import Console
 from rich.markdown import Markdown
@@ -73,3 +73,23 @@ def displayScreen(hex:str):
 
     return Panel(masterLayout, height=(temSize.lines - 2), title=doc['title'])
     
+
+def tableOfSegment():
+
+    campaign = Settings().get('Active Campain')
+    segs = Segment().readByCampaignId(campaign)
+
+    tbl = Table(
+        'hex', 'title'
+    )
+
+    for each in segs:
+
+        tbl.add_row(
+            each['hex'],
+            each['title']
+        )
+
+    return tbl
+
+
