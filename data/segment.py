@@ -1,9 +1,14 @@
-from tinydb import Query
-from cli import segment
+from random import choices
+from string import digits, ascii_lowercase
 
-from data import SettingsData
-from .base import BaseData
-from .screen import _mkHex
+from tinydb import Query
+
+from data.settings import SettingsData
+from data.base import BaseData
+
+def _mkHex(l:int=8):
+    pool = choices(population=(digits + ascii_lowercase), k=500)
+    return ''.join(choices(population=pool, k=l))
 
 class Segment(BaseData):
 

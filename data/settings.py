@@ -1,4 +1,4 @@
-from tinydb_base.getSet import GetSet, Factory, Query
+from tinydb_base.getSet import Factory, Query
 from .base import BaseGetSet
 
 class SettingsData(BaseGetSet):
