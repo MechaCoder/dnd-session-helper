@@ -12,7 +12,7 @@ from rich.table import Table
 
 from data import Actions
 from data import CampainData as Campain
-from data import CombatData, History, Screen, Settings
+from data import CombatData, History, Screen, Settings, Players
 from data.api import MonstersIndex
 from data.combat import NpcData
 from data.segment import Segment
@@ -344,6 +344,40 @@ def active(campain_id):
     campain_id = int(campain_id)
     a = Settings().set('Active Campain', campain_id)
     click.secho('campain {} has be set as active'.format(campain_id), fg='green')
+
+
+@campaign.group()
+def player(): 
+    """ allows the mangement if players in a campain """ 
+    pass
+
+@player.command()
+@click.argument('name', type=str)
+def mk(name):
+    Players().create(
+        name,
+        Settings().get('Active Campain')
+    )
+
+@player.command()
+def ls():
+    data = Players().readByCampaignId(
+        Settings().get('Active Campain')
+    )
+
+    tbl = Table('id', 'name', 'notes')
+    for each in data:
+        tbl.add_row(each.doc_id, each['name'], each['notes'])
+
+    Console().print(tbl)
+
+@player.command()
+@click.argument('doc_id', type=int)
+def rm(doc_id):
+    if not click.confirm('Are you sure you want to'):
+        return
+    Players().removerById(doc_id)
+
 
 @cli.group()
 def chat():

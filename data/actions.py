@@ -1,6 +1,6 @@
 from tinydb import Query
-from .base import BaseData
-from .screen import ScreenData
+from data.base import BaseData
+from data.screen import ScreenData
 
 class Actions(BaseData):
 

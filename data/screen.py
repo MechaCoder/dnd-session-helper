@@ -1,4 +1,3 @@
-from posixpath import expanduser
 from string import digits, ascii_lowercase
 from random import choices
 from os.path import isfile
