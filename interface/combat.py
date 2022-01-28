@@ -1,4 +1,4 @@
-from click.termui import confirm, secho
+from click.termui import confirm, secho, clear
 from data.api import getProfile
 from data.combat import CombatData, NpcData
 from data.players import Players
@@ -115,6 +115,7 @@ class CombatDisplay():
         con = Console()
         while run_obj:
             for each in self.data['order']:
+                clear()
                 con.print(
                     self.renderable(each[0])
                 )
