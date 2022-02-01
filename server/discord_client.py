@@ -18,11 +18,12 @@ from os import popen
 
 from data import Screen, History, Settings, settings, Players
 from data.dice import roller, DiceHistory
-from interface.display import displayScreen
+from interface.dm_screen import DmScreen
 from server.notfications import pushNoteCards
 
 history = History()
 settingsObj = Settings()
+dms_screen = DmScreen()
 
 class LocalClient(Client):
 
@@ -67,6 +68,8 @@ class LocalClient(Client):
             )
 
             hex = tags[0].split(':')[-1]
+            doc = Screen().getByHex(hex)
+
 
             if hex.lower() == 'ping':
                 await message.channel.send('I am ready to play')
@@ -77,11 +80,9 @@ class LocalClient(Client):
                 return
 
             
-            Console().clear()
-            doc = Screen().getByHex(hex)
             if Settings().get('displayServerSide'):
-                s = displayScreen(hex)
-                Console().print(s)
+                Console().clear()
+                dms_screen.main(hex)
 
             if isfile(doc['picture']) or doc['picture'] == '':
                 await message.channel.send(
