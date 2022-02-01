@@ -159,6 +159,3 @@ class DmScreen():
 
         Console().print(masterLayout)
         return True
-
-
-DmScreen().main('1u7p')

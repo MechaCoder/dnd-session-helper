@@ -15,12 +15,8 @@ from threading import Thread
 from os import popen
 
 from data import Screen, History, Settings, settings, Players
-from interface.display import displayScreen
-<<<<<<< Updated upstream
 from data.dice import roller, DiceHistory
-=======
 from interface.dm_screen import DmScreen
->>>>>>> Stashed changes
 from server.notfications import pushNoteCards
 
 history = History()
@@ -69,6 +65,8 @@ class LocalClient(Client):
             )
 
             hex = tags[0].split(':')[-1]
+            doc = Screen().getByHex(hex)
+
 
             if hex.lower() == 'ping':
                 await message.channel.send('I am ready to play')
@@ -79,14 +77,9 @@ class LocalClient(Client):
                 return
 
             
-            Console().clear()
-<<<<<<< Updated upstream
-            doc = displayScreen(hex)
-=======
-            doc = Screen().getByHex(hex)
             if Settings().get('displayServerSide'):
+                Console().clear()
                 dms_screen.main(hex)
->>>>>>> Stashed changes
 
             if isfile(doc['picture']) or doc['picture'] == '':
                 await message.channel.send(
