@@ -1,121 +1,95 @@
 from os import get_terminal_size
 from os.path import isfile
 from random import choice
+from PIL import Image
 
-from data import Actions, Screen, Settings, screen
-from pyfiglet import Figlet
-from rich import align, columns, console
+from data import Actions, Screen, Settings, CampainData, Segment
 from rich.columns import Columns
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.rule import Rule
 from rich.text import Text
-from treelib import Tree
+from rich.table import Table
+from rich.layout import Layout
+from rich.tree import Tree
 from treelib.exceptions import DuplicatedNodeIdError, NodeIDAbsentError
 
-def showTree(rootHex:str):
+def tree(hex):
+    screenObj = Screen()
+
+    first_screen = screenObj.readByHex(hex)['title']
+    tree = Tree(f'{hex} {first_screen}')
+
+    branch_hexs = []
+
+    for e in Actions().readActions(hex):
+        x = e['too']
+        scr = screenObj.readByHex(e['too'])['title']
+
+        if x not in branch_hexs:
+            tree.add(f'{x} {scr}')
+            branch_hexs.append(x)
     
-    actions = Actions().readAll()
-    screen = Screen()
-    tree = Tree()
 
-    tree.create_node(rootHex, rootHex)
+    return tree
 
-    elementsTitle = {}
-    for row in screen.readAll():
-        elementsTitle[row['hex']] = row['title']
-
-    i = 10
-    while i > 0:
-        for a in actions:
-            try:
-                t = "{} - {}".format(a['too'], elementsTitle[a['too']])
-                tree.create_node(t, a['too'], parent=a['from'])
-            except NodeIDAbsentError as err:
-                # print(err)
-                pass
-            except DuplicatedNodeIdError as err:
-                # print(err)
-                pass
-
-        i -= 1
-    tree.show()
-
-
-def displayScreen(hex, overRide=False):
+def displayScreen(hex:str):
+    
     doc = Screen().getByHex(hex)
+    cam = CampainData().readById(doc_id=doc['campain'])
+    temSize = get_terminal_size()
 
-    if (Settings().get('displayServerSide') == False) or (overRide):
-        return doc
+    masterLayout = Layout(name='master')
+
+    firstPannel = Layout(name='object')
+
+    topLeft = Table.grid(expand=True)
+    topLeft.add_column()
+    topLeft.add_column()
+    topLeft.add_row('[green]soundtrack', doc['soundtrack'])
+    topLeft.add_row('[green]background', doc['picture'])
+    topLeft.add_row('[green]campaign', cam['title'])
+    topLeft.add_row('[green]campaign bio', cam['bio'])
+
+
+    firstPannel.split_row(
+        topLeft, Panel(tree(hex), title='actions')
+    )
+
+    notes = Layout(name='notes', ratio=5)
+    notes.split_row(
+        Panel(doc['pl_notes'], title="Player's Notes", border_style="green"),
+        Panel(Markdown(doc['dm_notes']), title="Master's Notes", border_style="red")
+    )
+
+    masterLayout.split(
+        firstPannel, 
+        notes
+    )
+
+    img = Image.open(doc['picture'])
+    img.show()
+
+    return Panel(masterLayout, height=(temSize.lines - 2), title=doc['title'])
     
-    con = Console()
 
-    tWidth, tHight = get_terminal_size()
+def tableOfSegment():
 
-    pl_string = doc['pl_notes']
-    if pl_string == None:
-        pl_string = ""
+    campaign = Settings().get('Active Campain')
+    segs = Segment().readByCampaignId(campaign)
 
-    pl_string = Markdown(pl_string)
-
-    pl_notes_panel = Panel(
-        title='Players Notes',
-        renderable=pl_string,
-        border_style="green"
+    tbl = Table(
+        'hex', 'title'
     )
 
-    dm_string = doc['dm_notes']
-    if dm_string == None:
-        dm_string = ""
+    for each in segs:
 
-    dm_string = Markdown(dm_string)
+        tbl.add_row(
+            each['hex'],
+            each['title']
+        )
 
-    dm_notes_panel = Panel(
-        title='Dungeon Masters Notes ',
-        renderable=dm_string,
-        border_style="red"
-    )
+    return tbl
 
-    tWidth = (tWidth / 2) - 1
-    
 
-    cols = Columns(
-        renderables=[
-            pl_notes_panel, 
-            dm_notes_panel
-        ],
-        width=int(tWidth),
-    )
-
-    title = Figlet(
-        font='computer',
-    )
-
-    con.print(Text(
-        doc['title'],
-        justify='center'
-    ))
-
-    con.print(Rule(
-        title=doc['hex'],
-    ))
-
-    e = ':thumbs_down:'
-    if isfile(doc['picture']):
-        e = ':thumbs_up:'
-
-    con.print(
-        'picture - ', doc['picture'], e
-    )
-
-    con.print(
-        'soundtrack - ', doc['soundtrack']
-    )
-
-    Console().print(cols)
-    showTree(hex)
-
-    return doc
-
-    

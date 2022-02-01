@@ -1,4 +1,4 @@
-from tinydb_base.getSet import GetSet, Factory, Query
+from tinydb_base.getSet import Factory, Query
 from .base import BaseGetSet
 
 class SettingsData(BaseGetSet):
@@ -14,6 +14,9 @@ class SettingsData(BaseGetSet):
 
         if self.exist('displayServerSide') == False:
             self.set('displayServerSide', True)
+
+        if self.exist('screenTemplate') == False:
+            self.set('screenTemplate', '')
 
 
     def exist(self, tag:str):
@@ -34,6 +37,9 @@ class SettingsData(BaseGetSet):
         
         tags = []
         for row in db.tbl.all():
+            if row['tag'] == 'screenTemplate':
+                continue
+            
             tags.append(
                 row['tag']
             )

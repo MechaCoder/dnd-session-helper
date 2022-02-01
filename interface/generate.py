@@ -1,7 +1,5 @@
 from faker import Faker
-from rich.text import Text
-from rich.console import Console, RenderGroup
-from rich.panel import Panel
+from rich.console import Console, Group
 from rich.columns import Columns
 
 from random import choice, choices, randint
@@ -91,7 +89,7 @@ def displaySimpleNPC():
     genderRow = f'[bold]Presentation[/bold] [{c}]{gender}[/{c}]'
     appearanceRow = '[bold]appearance:[/bold] ' + info['appearance']
 
-    pannel = RenderGroup(nameRow, genderRow, appearanceRow)
+    pannel = Group(nameRow, genderRow, appearanceRow)
 
     return pannel
 
@@ -154,7 +152,7 @@ def displayComplexNPC():
     jobsRow = '[bold]Jobs: [/bold]' + info['jobs']
     ageRow = '[bold]Age: [/bold]' + str(genAge(info=info))
     
-    psy = RenderGroup(
+    psy = Group(
         strengthRow,
         weakerRow,
         talentRow,
@@ -166,7 +164,7 @@ def displayComplexNPC():
         secretRow
 
     )
-    phisc = RenderGroup(
+    phisc = Group(
         ageRow,
         genderRow,
         appearanceRow,

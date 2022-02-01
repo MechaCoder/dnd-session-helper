@@ -22,7 +22,7 @@ the new dev mode is a method of protecting your campgin and content when there i
 |mk|`title`, `--pic`, `--soundtrack`, `--dm_notes`, `--pl_notes`|this creates a new screen|
 |rm|`hex`| remove screen by hex|
 |update|||
-|-- notes|`hex`, `dm|pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
+|-- notes|`hex`, `dm` - `pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
 |-- picture|`hex`,`url|path`|this will allow you to update the img that a hex uses|
 |-- soundtrack|`hex`,`url|path`|this will allow you to update the img that a hex uses|
 |-- title|`hex`, `new title`|this will allow you to update the title|
@@ -45,15 +45,14 @@ the new dev mode is a method of protecting your campgin and content when there i
 
 #### export
 
-exports a campaign to docx and pdf.
-___
+exports a campaign to docx and pdf. this is done by getting all information from a campaign id.
 
 ### Screen Details
 
 A Screen is a snapshot; this can be an NPC (non-playable character), giving the party a letter, a menu. The screen is made up of the following;
 
 - hex; the hex is a four-digit code, which is made up letters and numbers and is used to fetch a screen.
-- soundtrack; this soundtrack is a `Groovy` compatible URL this talked about later.
+- soundtrack; this can now be a youtube or any link that can be embeded into disord
 - picture; this can be an image path on your local system or a URL.
 - title; this title is something that helps you remember what the content is.
 - dm notes; these note that will appear on the server screen  

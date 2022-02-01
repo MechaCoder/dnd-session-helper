@@ -9,7 +9,7 @@ class CampainData(BaseData):
         if len(self.readAll()) == 0:
             self.create('my first campain')
 
-    def create(self, title:str, bio:str = '') -> int:
+    def create(self, title:str, bio:str = ''):
         
         if isinstance(title, str) == False:
             raise TypeError('the title needs to a string')
@@ -23,3 +23,11 @@ class CampainData(BaseData):
         }
         
         return super().create(row)
+
+    def listDoc_ids(self):
+
+        data = []
+        for e in self.readAll():
+            data.append(e.doc_id)
+
+        return data

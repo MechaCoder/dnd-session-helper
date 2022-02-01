@@ -1,4 +1,3 @@
-from posixpath import expanduser
 from string import digits, ascii_lowercase
 from random import choices
 from os.path import isfile
@@ -14,6 +13,7 @@ from requests.exceptions import ConnectionError
 from .commons import copylocalImg
 from .exception import DataException
 from .settings import SettingsData
+from .segment import Segment
 
 def _mkHex(l:int=8):
     pool = choices(population=(digits + ascii_lowercase), k=500)
@@ -31,7 +31,7 @@ class ScreenData(BaseData):
         exists = db.tbl.contains(Query().hex == hex)
         db.close()
 
-        return False
+        return exists
 
     def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = ''):
         row = {}
@@ -93,10 +93,16 @@ class ScreenData(BaseData):
         return (created_id, row['hex'])
 
     def getByHex(self, hexval:str):
+
+        seg = Segment()
         
         db = self.createObj()
         row = db.tbl.get(Query().hex == hexval)
         db.close()
+
+        row['dm_notes'] = seg.addSegmentToString(row['dm_notes'])
+        row['pl_notes'] = seg.addSegmentToString(row['pl_notes'])
+
         return row
 
     def getListOfHexs(self):
@@ -131,4 +137,20 @@ class ScreenData(BaseData):
         db.close()
         
         return True
+
+    def copyScreen(self, hex:str, title:str):
+
+        if self.exists('hex', hex) == False:
+            raise DataException('hex dose not excist')
+
+        data = self.getByHex(hex)
+
+        return self.create(
+            soundtrack=data['soundtrack'],
+            picture=data['picture'],
+            campain=data['campain'],
+            dm_notes=data['dm_notes'],
+            pl_notes=data['pl_notes'],
+            title=title
+        )
 

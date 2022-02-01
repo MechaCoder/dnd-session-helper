@@ -1,6 +1,6 @@
 from tinydb import Query
-from .base import BaseData
-from .screen import ScreenData
+from data.base import BaseData
+from data.screen import ScreenData
 
 class Actions(BaseData):
 
@@ -48,3 +48,21 @@ class Actions(BaseData):
         obj.close()
 
         return data
+
+    def removeByHex(self, hex:str):
+
+        obj = self.createObj()
+        obj.tbl.remove(Query()['from']==hex)
+        obj.tbl.remove(Query()['too']==hex)
+        obj.close()
+
+        return True
+
+    def removeAllByHex(self, to_hex:str, from_hex:str):
+        
+        obj = self.createObj()
+        obj.tbl.remove(Query()['from']==from_hex)
+        obj.tbl.remove(Query()['too']==to_hex)
+        obj.close()
+
+        return True
