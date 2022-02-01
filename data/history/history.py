@@ -3,7 +3,7 @@ from ..base import BaseData, projectRoot
 
 class History(BaseData):
 
-    def __init__(self, file: str = 'ds.chat.history.json', table: str = 'history', requiredKeys: str='msg,sender,guildname,channel,ts'):
+    def __init__(self, file: str = 'ds.chat.history.json', table: str = 'history', requiredKeys: str='msg:str,sender:str,guildname:str,channel:str,ts:int'):
         super().__init__(table=table, requiredKeys=requiredKeys)
         self.fileName = join(projectRoot(), file)
 

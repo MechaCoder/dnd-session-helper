@@ -1,6 +1,8 @@
 import re
 from os.path import isfile
 from click.decorators import group
+from click import confirm
+
 from discord import Client, File
 import discord
 from discord.channel import DMChannel, TextChannel
@@ -25,7 +27,8 @@ settingsObj = Settings()
 class LocalClient(Client):
 
     async def on_ready(self):
-        DiceHistory().clear()
+        if confirm('clear chat history', default=True):
+            DiceHistory().clear()
         print('Logged on:', self.user)
 
     async def on_message(self, message):
