@@ -130,16 +130,23 @@ class LocalClient(Client):
 
                 else:
 
-                    obj = roller(tag)
+                    try:
+                        obj = roller(tag)
 
-                    msg = "```\n roll total: {} \n roll list:  {} ```".format(
-                        obj['sum'],
-                        obj['rolls']
-                    )
+                        msg = "```\n roll total: {} \n roll list:  {} ```".format(
+                            obj['sum'],
+                            obj['rolls']
+                        )
 
-                    await message.channel.send(
-                        msg
-                    )
+                        if len(msg) > 1500:
+                            msg = "```\n roll total: {} \n ```".format(obj['sum'])
+
+                        await message.channel.send(
+                            msg
+                        )
+                    except Exception as e:
+
+                        await message.channel.send(str(e))
 
         return 
 

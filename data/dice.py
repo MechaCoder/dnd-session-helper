@@ -28,10 +28,13 @@ def roller(slug:str = '1D6'):
         amount = int(sluglist[0])
         dieType = int(sluglist[1])
     except Exception:
-        raise SlugFormat
+        raise SlugFormat('there has benn a failer to covert')
 
     rolls = []
     total = 0
+
+    if amount > 100:
+        raise SlugFormat('you should not need to roll more 100 dice')
 
     for e in range(amount):
 
