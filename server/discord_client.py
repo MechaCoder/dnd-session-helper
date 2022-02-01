@@ -16,11 +16,16 @@ from os import popen
 
 from data import Screen, History, Settings, settings, Players
 from interface.display import displayScreen
+<<<<<<< Updated upstream
 from data.dice import roller, DiceHistory
+=======
+from interface.dm_screen import DmScreen
+>>>>>>> Stashed changes
 from server.notfications import pushNoteCards
 
 history = History()
 settingsObj = Settings()
+dms_screen = DmScreen()
 
 class LocalClient(Client):
 
@@ -75,7 +80,13 @@ class LocalClient(Client):
 
             
             Console().clear()
+<<<<<<< Updated upstream
             doc = displayScreen(hex)
+=======
+            doc = Screen().getByHex(hex)
+            if Settings().get('displayServerSide'):
+                dms_screen.main(hex)
+>>>>>>> Stashed changes
 
             if isfile(doc['picture']) or doc['picture'] == '':
                 await message.channel.send(
