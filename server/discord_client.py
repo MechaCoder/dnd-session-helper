@@ -30,6 +30,7 @@ class LocalClient(Client):
     async def on_ready(self):
         if confirm('clear chat history', default=True):
             DiceHistory().clear()
+            print('[green]cleared chat history')
         print('Logged on:', self.user)
 
     async def on_message(self, message):
