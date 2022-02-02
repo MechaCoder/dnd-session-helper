@@ -1,59 +1,86 @@
 # dnd session helper
 
-A tool that helps DMs to relay vital information using discord. In dnd campaign, there is interactions and situations where there needs to be text and images sent.
+**In RPGs there is always a need to plan the campaign you (the DM) and the players with play though. this project is designed help with the.**
 
-## Important Concepts
+this tool is designed to work directly with discord and provide a way to provide the party with information, this is first done by manigming the information though a command line interface and then you can use the discord bot to
 
-### cli vs server
+## How to use
 
-the cli is method that you use to create, change and remove content. the commands tables is below.
+becouse the project is mainly designed for `me` to use it best to use all the commands though useing pipenv, `pipenv run python cil.py` and useing `pipenv run python server.py`
 
-### dev mode (NEW)
+### Commands
 
-the new dev mode is a method of protecting your campgin and content when there is a bug or i am working on a shirey new feature ;-)
+#### Actions
 
-#### Screen
+an action is a essentilly a path way for the party to follow, this will enable the DM to quickly though screen view to see where the party is going to next.
 
-|command|arguments|notes|
+|command|attr|notes|
 |---|---|---|
-|cat|`hex`| this allows you to view a screen by the hex |
-|cp| `hex`| this copys a segment to your clip that can be pasted in the discord chat|
-|ls|| this diplays a table showing all.|
-|mk|`title`, `--pic`, `--soundtrack`, `--dm_notes`, `--pl_notes`|this creates a new screen|
-|rm|`hex`| remove screen by hex|
-|update|||
-|-- notes|`hex`, `dm` - `pl`|this allows you update notes, by importing the hex then `dm` for the dm notes or `pl` for players notes|
-|-- picture|`hex`,`url|path`|this will allow you to update the img that a hex uses|
-|-- soundtrack|`hex`,`url|path`|this will allow you to update the img that a hex uses|
-|-- title|`hex`, `new title`|this will allow you to update the title|
+|mk|`too`, `from`| this command will create an action.
+|rm|`hex`| this command will remove an action that is has a hex.
 
 #### campaign
 
-|command|arguments|notes|
-|---|---|---|
-|active|`id`|sets the active campign with in the system |
-|ls||this prints a table of campaigns in the system |
-|mk|`name`, `bio`|creates a new campaign|
+A campaign is a method of organizeing infomation so if your a dm like me you have a tendancy to work on many different campaigns at once
 
-#### combat
-
-|command|arguments|notes|
+|command|attr|notes|
 |---|---|---|
-|ls||table of combat|
-|mk|`name`, `url`|creates a combat element|
-|rm| `id`| removes combat by id|
+|active| campaignId |sets the active campaing only one campaign can be active at once|
+|ls||list all campaigns|
+|mk|`title`, `--bio` | this creates new campiagn.|
+
+#### campaign player
+
+this provide an easy way to add edit and remove players.
+
+|command|attr|notes|
+|---|---|---|
+|ls||list all players in a compaign|
+|mk|`name`| this will create a new player|
+|rm|`doc_id`| removes by id the player|
+
+#### Chat
+
+this provide a method of reviewing a chat log.
+
+|command|attr|notes|
+|---|---|---|
+|clear||this will delete all chat|
+|read|| this will out put on as a table the chat log|
+
+#### countdown
+
+provides a method to create a terminal countdown that outputs, `--minutes` or `--hours`.
 
 #### export
 
-exports a campaign to docx and pdf. this is done by getting all information from a campaign id.
+provides a method to export a campaign takes a campaign ID and
 
-### Screen Details
+### gen
 
-A Screen is a snapshot; this can be an NPC (non-playable character), giving the party a letter, a menu. The screen is made up of the following;
+quickly allows people to generate NPC characters with complete profiles, takes `complex` or `simple`, simple will give you a quick profile and complex will give you a complete profile.
 
-- hex; the hex is a four-digit code, which is made up letters and numbers and is used to fetch a screen.
-- soundtrack; this can now be a youtube or any link that can be embeded into disord
-- picture; this can be an image path on your local system or a URL.
-- title; this title is something that helps you remember what the content is.
-- dm notes; these note that will appear on the server screen  
-- pl notes; these note are sent to the discord server.
+### screen
+
+Screens are a colection of player notes, dm notes, soundtrack and a picture
+
+|command|attr|notes|
+|---|---|---|
+|cat|`hex`|displays your a single screen|
+|cp|`hex`|copys all data from one screen to new screen under a new hex|
+|ls|| lists outs screens in a campaign|
+|mk| `title` | creates a new screen|
+
+
+### screen combat
+
+an ecounter builder and reader.
+
+### screen segment
+
+repeatable sections that can be refenced and the content imported into scrren notes this is done by useing hex segment
+
+### screen template
+
+this provides a a dm a way to pre-define notes stucher in the settings.
+

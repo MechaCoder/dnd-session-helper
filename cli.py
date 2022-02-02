@@ -210,6 +210,7 @@ def edit(hex):
 @segment.command()
 @click.argument('hex', type=click.Choice(segmentsHexList))
 def rm(hex):
+    """removing the segment """
     Segment().removeByHex(hex)
 
 
@@ -274,7 +275,9 @@ def ls(screenhex):
     Console().print(tbl)
 
 @combat.group()
-def npc(): pass
+def npc():
+    """ Genrate a random npcs."""
+    pass
 
 indexChoices = MonstersIndex().readAllIndex()
 randomName = Faker().first_name()
@@ -354,6 +357,7 @@ def player():
 @player.command()
 @click.argument('name', type=str)
 def mk(name):
+    """ creates a new player in the active campain """
     Players().create(
         name,
         Settings().get('Active Campain')
@@ -361,6 +365,8 @@ def mk(name):
 
 @player.command()
 def ls():
+    """ lists all players in the active campain """
+
     data = Players().readByCampaignId(
         Settings().get('Active Campain')
     )
@@ -374,6 +380,8 @@ def ls():
 @player.command()
 @click.argument('doc_id', type=int)
 def rm(doc_id):
+    """ remove a player from the active campain """
+
     if not click.confirm('Are you sure you want to'):
         return
     Players().removerById(doc_id)
@@ -413,6 +421,7 @@ def read():
 
 @chat.command()
 def clear():
+    """ clear the history """
     History().clear()
     click.secho('chat history has been cleared')
 
@@ -502,6 +511,7 @@ def mk(from_hex, to_hex):
 @click.argument('from_hex', type=click.Choice(listofhexValues))
 @click.argument('to_hex', type=click.Choice(listofhexValues))
 def rm(from_hex, to_hex):
+    """removes a link between screens"""
     Actions().removeAllByHex(from_hex=from_hex, to_hex=to_hex)
     secho('actions have been deleted')
 
