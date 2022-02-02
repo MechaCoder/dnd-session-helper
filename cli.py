@@ -305,7 +305,9 @@ def rm(doc_ids):
     NpcData().removeById(doc_ids)
 
 @cli.group()
-def campaign(): pass
+def campaign():
+    """ mangement of campaign """
+    pass
 
 @campaign.command()
 @click.argument('title', type=str)
@@ -426,7 +428,9 @@ def clear():
     click.secho('chat history has been cleared')
 
 @cli.group()
-def settings(): pass
+def settings(): 
+    """ enables the user to change settings."""
+    pass
 
 
 @settings.command()
