@@ -6,7 +6,8 @@ import click
 from click.termui import edit, secho
 from faker.proxy import Faker
 from pyperclip import copy
-from rich import print
+
+from rich import print, prompt
 from rich.console import Console
 from rich.table import Table
 
@@ -21,6 +22,8 @@ from interface.display import displayScreen, tableOfSegment
 from interface.export import export as exporter
 from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.tables import listScreens
+
+from server import LocalClient
 
 screenObj = Screen()
 campainObj = Campain()
@@ -519,5 +522,28 @@ def rm(from_hex, to_hex):
     Actions().removeAllByHex(from_hex=from_hex, to_hex=to_hex)
     secho('actions have been deleted')
 
+
+@cli.group()
+def bot():
+    """the commmands bot"""
+    pass
+
+@bot.command()
+def run():
+    """runs the bot"""
+
+    settingsObj = Settings()
+
+    if settingsObj.exist('discord bot token') == False:
+        token = prompt('Discord bot Token not found? pleses enter token', hide_input=True)
+        settingsObj.set('discord bot token', token)
+
+    try:
+        key = settingsObj.get('discord bot token')
+        LocalClient().run(key)
+    except Exception as err:
+        print(err)
+
+        
 if __name__ == '__main__':
     cli()
