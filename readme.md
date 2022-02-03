@@ -71,7 +71,6 @@ Screens are a colection of player notes, dm notes, soundtrack and a picture
 |ls|| lists outs screens in a campaign|
 |mk| `title` | creates a new screen|
 
-
 ### screen combat
 
 an ecounter builder and reader.
@@ -84,3 +83,6 @@ repeatable sections that can be refenced and the content imported into scrren no
 
 this provides a a dm a way to pre-define notes stucher in the settings.
 
+## discord bot
+
+`pipenv run python server.py` will run the bot from your computer, to use the bot you will need to set up a connection use the dev pannel, [link](https://discord.com/developers/applications)
