@@ -19,6 +19,10 @@ class SettingsData(BaseGetSet):
             self.set('screenTemplate', '')
 
 
+        if self.exist('screen.readall.sortTag') == False:
+            self.set('screen.readall.sortTag', 'title')
+
+
     def exist(self, tag:str):
         db = Factory(self.fileName, self.tableName)
         exists = db.tbl.contains(Query().tag == tag)

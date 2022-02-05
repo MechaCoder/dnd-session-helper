@@ -57,7 +57,7 @@ class Screen(ScreenData):
         setting = SettingsData().get('Active Campain')
         db = self.createObj()
         data = db.tbl.search(Query().campain == setting)
-        data.sort(key=lambda x: x['title'], reverse=True)
+        data.sort(key=lambda x: x[ SettingsData().get('screen.readall.sortTag') ], reverse=True)
         db.close()
 
         return data
