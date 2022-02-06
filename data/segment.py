@@ -1,3 +1,4 @@
+from dataclasses import replace
 from random import choices
 from string import digits, ascii_lowercase
 
@@ -72,6 +73,10 @@ class Segment(BaseData):
 
         for each in self.readAll():
             segmentTag = "{" + each['hex'] + "}"
-            temp = temp.replace(segmentTag, temp)
+
+            # print(each['text'])
+            x = each['text']
+            temp = temp.replace(segmentTag, x)
+
 
         return temp
