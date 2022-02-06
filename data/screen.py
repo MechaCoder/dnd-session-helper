@@ -22,7 +22,7 @@ def _mkHex(l:int=8):
 
 class ScreenData(BaseData):
 
-    def __init__(self, table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain:int'):
+    def __init__(self, table: str = 'screenData', requiredKeys='hex,title,soundtrack,picture,dm_notes,pl_notes,campain:int,hide:bool'):
         super().__init__(table=table, requiredKeys=requiredKeys)
         self.settings = SettingsData()
 
@@ -33,8 +33,10 @@ class ScreenData(BaseData):
 
         return exists
 
-    def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = ''):
-        row = {}
+    def create(self, soundtrack:str, picture:str, campain:int = 0, title:str = 'screen', dm_notes:str = '', pl_notes:str = '', hide:bool = False):
+        row = {
+            'hide': hide,
+        }
         hexval = _mkHex(l=4)
 
         #makes a unique hex
@@ -95,8 +97,6 @@ class ScreenData(BaseData):
     def getByHex(self, hexval:str):
 
         seg = Segment()
-
-        print(hexval)
         
         db = self.createObj()
         row = db.tbl.get(Query().hex == hexval)
@@ -164,3 +164,18 @@ class ScreenData(BaseData):
             title=title
         )
 
+
+def updateRows():
+    """updates all rows in table"""
+
+    sData = ScreenData().createObj()
+    data = {'hide': False}
+    update_ids = []
+    
+    for e in sData.tbl.all():
+        if 'hide' not in e.keys():
+            update_ids.append(e.doc_id)
+
+    
+    sData.tbl.update(data, doc_ids=update_ids)
+    

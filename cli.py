@@ -14,6 +14,7 @@ from rich.table import Table
 from data import Actions
 from data import CampainData as Campain
 from data import CombatData, History, Screen, Settings, Players
+from data import updateRows
 from data.api import MonstersIndex
 from data.combat import NpcData
 from data.segment import Segment
@@ -151,6 +152,11 @@ def notes(hex, ntype):
             screenObj.update_pl_notes(hex=hex, note=pl_note)
             click.secho('pl notes have been updated', fg='green')
         return
+
+@update.command()
+@click.argument('hex', type=click.Choice(listofhexValues))
+def hide(hex):
+    screenObj.toggleHide(hex)
 
 @screen.command()
 @click.argument('hex', type=click.Choice(listofhexValues))
@@ -456,6 +462,11 @@ def get():
 def set(tag, val):
     """set a setting from excistings"""
     Settings().set(tag, val)
+
+@settings.command()
+def update():
+    """updates the database strucher"""
+    updateRows()
 
 @cli.group()
 def gen(): 

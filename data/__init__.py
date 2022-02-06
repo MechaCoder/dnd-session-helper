@@ -1,5 +1,5 @@
 from tinydb.queries import Query
-from .screen import ScreenData
+from .screen import ScreenData, updateRows
 from .history import History
 from .actions import Actions
 from .campain import CampainData
@@ -54,9 +54,11 @@ class Screen(ScreenData):
         )
 
     def readAll(self):
+
+
         setting = SettingsData().get('Active Campain')
         db = self.createObj()
-        data = db.tbl.search(Query().campain == setting)
+        data = db.tbl.search((Query().campain == setting) & (Query().hide == False))
         data.sort(key=lambda x: x[ SettingsData().get('screen.readall.sortTag') ], reverse=True)
         db.close()
 
@@ -68,6 +70,12 @@ class Screen(ScreenData):
         row = db.tbl.get(Query().hex == hex)
         db.close()
         return row
+
+    def toggleHide(self, hex:str):
+
+        db = self.createObj()
+        data = db.tbl.get(Query().hex == hex)
+        db.tbl.update({'hide':  not data['hide']}, Query().hex == hex)
     
 class Settings(SettingsData): pass 
 
