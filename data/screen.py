@@ -95,10 +95,20 @@ class ScreenData(BaseData):
     def getByHex(self, hexval:str):
 
         seg = Segment()
+
+        print(hexval)
         
         db = self.createObj()
         row = db.tbl.get(Query().hex == hexval)
         db.close()
+
+        
+
+        if not isinstance(row['dm_notes'], str):
+            row['dm_notes'] = ''
+
+        if not isinstance(row['pl_notes'], str):
+            row['pl_notes'] = ''
 
         row['dm_notes'] = seg.addSegmentToString(row['dm_notes'])
         row['pl_notes'] = seg.addSegmentToString(row['pl_notes'])
