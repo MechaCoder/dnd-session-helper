@@ -7,6 +7,7 @@ from .settings import SettingsData
 from .combat import CombatData
 from .players import Players
 from .segment import Segment
+from .links import Links
 
 import validators
 

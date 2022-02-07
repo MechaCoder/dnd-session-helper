@@ -13,7 +13,7 @@ from rich.table import Table
 
 from data import Actions
 from data import CampainData as Campain
-from data import CombatData, History, Screen, Settings, Players
+from data import CombatData, History, Screen, Settings, Players, Links
 from data import updateRows
 from data.api import MonstersIndex
 from data.combat import NpcData
@@ -23,6 +23,7 @@ from interface.display import displayScreen, tableOfSegment
 from interface.export import export as exporter
 from interface.generate import displayComplexNPC, displaySimpleNPC
 from interface.tables import listScreens
+from interface.links import listOlinksAsTable
 
 from server import LocalClient
 
@@ -554,6 +555,24 @@ def run():
         LocalClient().run(key)
     except Exception as err:
         print(err)
+
+@cli.group()
+def links():
+    """some useful links for the DM"""
+    pass
+
+@links.command()
+@click.argument('tag', type=str)
+@click.argument('url', type=str)
+def set(tag, url):
+    """set a tag to a url"""
+    Links().set(tag, url)
+
+@links.command()
+def ls():
+    """list all links"""
+    listOlinksAsTable()
+
 
         
 if __name__ == '__main__':
