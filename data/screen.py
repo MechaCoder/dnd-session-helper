@@ -94,7 +94,7 @@ class ScreenData(BaseData):
         created_id = super().create(row)
         return (created_id, row['hex'])
 
-    def getByHex(self, hexval:str):
+    def getByHex(self, hexval:str, segs:bool = True):
 
         seg = Segment()
         
@@ -110,8 +110,9 @@ class ScreenData(BaseData):
         if not isinstance(row['pl_notes'], str):
             row['pl_notes'] = ''
 
-        row['dm_notes'] = seg.addSegmentToString(row['dm_notes'])
-        row['pl_notes'] = seg.addSegmentToString(row['pl_notes'])
+        if segs:
+            row['dm_notes'] = seg.addSegmentToString(row['dm_notes'])
+            row['pl_notes'] = seg.addSegmentToString(row['pl_notes'])
 
         return row
 

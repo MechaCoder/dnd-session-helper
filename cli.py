@@ -138,7 +138,7 @@ def picture(hex, picture):
 def notes(hex, ntype):
     """update the screens nots"""
     
-    doc = screenObj.getByHex(hex)
+    doc = screenObj.getByHex(hex, segs=False)
 
     if ntype == 'dm':
         dm_note = click.edit(text=doc['dm_notes'])
