@@ -1,3 +1,4 @@
+from click import option
 from click.termui import confirm, secho, clear
 from data.api import getProfile
 from data.combat import CombatData, NpcData
@@ -12,6 +13,9 @@ from rich.panel import Panel
 from rich.prompt import Prompt, IntPrompt
 from rich.rule import Rule
 from rich.table import Table
+from rich import print
+
+from simple_term_menu import TerminalMenu
 
 
 def modifiers(score):
@@ -110,20 +114,31 @@ class CombatDisplay():
         self.data = combat_data(combat_id)
 
     def run(self):
+        """runs the combat."""
 
         run_obj = True
         con = Console()
         while run_obj:
             for each in self.data['order']:
+
+                if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
+                    continue
+
                 clear()
                 con.print(
                     self.renderable(each[0])
                 )
                 x = Prompt.ask('::>>')
+                if x == '':
+                    continue
+
                 if x == 'exit':
                     exit()
 
+                self.combatCommands(x)
+
     def renderable(self, name:str):
+
         masterLayout = Layout(
             visible=1
         )
@@ -141,7 +156,7 @@ class CombatDisplay():
         )
         return masterLayout
 
-    def _screenOrderOfPlay(self, name:str = 'Tammy'):
+    def _screenOrderOfPlay(self, name:str):
 
         tbl = Table(
             'name', 'initiative', 'type', 'turn',
@@ -157,7 +172,12 @@ class CombatDisplay():
             type = ''
             if each[2] == 'pc':
                 type = 'player'
-            tbl.add_row(each[0], str(each[1]), type, turn)
+            
+            styleStr = ''
+            if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
+                styleStr = 'red'
+
+            tbl.add_row(each[0], str(each[1]), type, turn, style=styleStr)
 
         return tbl
 
@@ -186,6 +206,7 @@ class CombatDisplay():
         tbl1.add_row("Armour Class: ", str(profile['armor_class']) )
         tbl1.add_row("Hit Points: ", str(profile['hit_points']) + " (" + profile['hit_dice'] + ")")
         speedStr = ""
+
         for e in profile['speed'].keys():
             speedStr += (e + "-" + profile['speed'][e])
 
@@ -226,3 +247,35 @@ class CombatDisplay():
         )
 
         return Panel(g)
+
+    def combatCommands(self, command:str):
+
+        if command == '':
+            return False
+
+        if command.lower() == 'hp':
+            print('who is the target?')
+            options = []
+            for e in self.data['order']:
+                if e[2] == 'pc':
+                    continue
+                options.append(e[0])
+
+            tMenu = TerminalMenu(options)
+            target = options[tMenu.show()]
+
+            options = ['remove', 'add']
+            tMenu = TerminalMenu(options)
+            action =  options[tMenu.show()]
+            
+            
+            hp = IntPrompt.ask(f'how many hp to {action}')
+
+            
+            if action == 'add':
+                self.data['npcs'][target]['hit_points'] += hp
+            
+            if action == 'remove':
+                self.data['npcs'][target]['hit_points'] -= hp
+
+            return False
