@@ -1,10 +1,12 @@
 from click import option
 from click.termui import confirm, secho, clear
+from faker import Faker
 from data.api import getProfile
 from data.combat import CombatData, NpcData
 from data.players import Players
 from data import Screen, screen
 from data.dice import roller
+from data.api import MonstersIndex
 from rich import prompt
 from rich.console import Console, Group
 from rich.layout import Layout
@@ -112,6 +114,7 @@ class CombatDisplay():
 
     def __init__(self, combat_id:int):
         self.data = combat_data(combat_id)
+        self.combat_id = combat_id
 
     def run(self):
         """runs the combat."""
@@ -128,7 +131,7 @@ class CombatDisplay():
                 con.print(
                     self.renderable(each[0])
                 )
-                x = Prompt.ask('::>>')
+                x = Prompt.ask('::>>', choices=['','exit', 'hp', 'add npc'])
                 if x == '':
                     continue
 
@@ -279,3 +282,15 @@ class CombatDisplay():
                 self.data['npcs'][target]['hit_points'] -= hp
 
             return False
+
+        if command == 'add npc':
+            obj = NpcData()
+            
+            npcIndex = MonstersIndex().readAllIndex()
+            char = Prompt.ask("what type of NPC", choices=npcIndex)
+            amount = IntPrompt.ask("how many to add")
+
+            for n in range(amount):
+                obj.create(Faker().first_name(), char, self.combat_id)
+
+            self.data = combat_data(self.combat_id)

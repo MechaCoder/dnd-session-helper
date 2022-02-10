@@ -54,12 +54,18 @@ class Screen(ScreenData):
             value=note
         )
 
-    def readAll(self):
+    def readAll(self, all:bool=False):
 
 
         setting = SettingsData().get('Active Campain')
         db = self.createObj()
-        data = db.tbl.search((Query().campain == setting) & (Query().hide == False))
+
+        if all:
+            data = db.tbl.search( (Query().campain == setting) )
+
+        else:
+            data = db.tbl.search((Query().campain == setting) & (Query().hide == False))
+            
         data.sort(key=lambda x: x[ SettingsData().get('screen.readall.sortTag') ], reverse=True)
         db.close()
 

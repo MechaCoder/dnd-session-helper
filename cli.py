@@ -78,9 +78,10 @@ def mk(title, pic, soundtrack, dm_notes, pl_notes):
     click.secho('a new screen have been created, {}'.format(newScreen[1]), fg='green')
 
 @screen.command()
-def ls():
+@click.option('--all', help='shows all screen', is_flag=True)
+def ls(all):
     """prints out a table of all screens in the system"""
-    lis = listScreens()
+    lis = listScreens(all)
     Console().print(lis)
 
 @screen.command()

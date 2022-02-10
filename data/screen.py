@@ -118,7 +118,7 @@ class ScreenData(BaseData):
 
     def getListOfHexs(self):
         rows = []
-        for row in self.readAll():
+        for row in super().readAll():
             rows.append(row['hex'])
         return rows
 
