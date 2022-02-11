@@ -1,9 +1,12 @@
+from click import option
 from click.termui import confirm, secho, clear
+from faker import Faker
 from data.api import getProfile
 from data.combat import CombatData, NpcData
 from data.players import Players
 from data import Screen, screen
 from data.dice import roller
+from data.api import MonstersIndex
 from rich import prompt
 from rich.console import Console, Group
 from rich.layout import Layout
@@ -12,6 +15,9 @@ from rich.panel import Panel
 from rich.prompt import Prompt, IntPrompt
 from rich.rule import Rule
 from rich.table import Table
+from rich import print
+
+from simple_term_menu import TerminalMenu
 
 
 def modifiers(score):
@@ -108,22 +114,34 @@ class CombatDisplay():
 
     def __init__(self, combat_id:int):
         self.data = combat_data(combat_id)
+        self.combat_id = combat_id
 
     def run(self):
+        """runs the combat."""
 
         run_obj = True
         con = Console()
         while run_obj:
             for each in self.data['order']:
+
+                if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
+                    continue
+
                 clear()
                 con.print(
                     self.renderable(each[0])
                 )
-                x = Prompt.ask('::>>')
+                x = Prompt.ask('::>>', choices=['','exit', 'hp', 'add npc'])
+                if x == '':
+                    continue
+
                 if x == 'exit':
                     exit()
 
+                self.combatCommands(x)
+
     def renderable(self, name:str):
+
         masterLayout = Layout(
             visible=1
         )
@@ -141,7 +159,7 @@ class CombatDisplay():
         )
         return masterLayout
 
-    def _screenOrderOfPlay(self, name:str = 'Tammy'):
+    def _screenOrderOfPlay(self, name:str):
 
         tbl = Table(
             'name', 'initiative', 'type', 'turn',
@@ -157,7 +175,12 @@ class CombatDisplay():
             type = ''
             if each[2] == 'pc':
                 type = 'player'
-            tbl.add_row(each[0], str(each[1]), type, turn)
+            
+            styleStr = ''
+            if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
+                styleStr = 'red'
+
+            tbl.add_row(each[0], str(each[1]), type, turn, style=styleStr)
 
         return tbl
 
@@ -186,6 +209,7 @@ class CombatDisplay():
         tbl1.add_row("Armour Class: ", str(profile['armor_class']) )
         tbl1.add_row("Hit Points: ", str(profile['hit_points']) + " (" + profile['hit_dice'] + ")")
         speedStr = ""
+
         for e in profile['speed'].keys():
             speedStr += (e + "-" + profile['speed'][e])
 
@@ -226,3 +250,47 @@ class CombatDisplay():
         )
 
         return Panel(g)
+
+    def combatCommands(self, command:str):
+
+        if command == '':
+            return False
+
+        if command.lower() == 'hp':
+            print('who is the target?')
+            options = []
+            for e in self.data['order']:
+                if e[2] == 'pc':
+                    continue
+                options.append(e[0])
+
+            tMenu = TerminalMenu(options)
+            target = options[tMenu.show()]
+
+            options = ['remove', 'add']
+            tMenu = TerminalMenu(options)
+            action =  options[tMenu.show()]
+            
+            
+            hp = IntPrompt.ask(f'how many hp to {action}')
+
+            
+            if action == 'add':
+                self.data['npcs'][target]['hit_points'] += hp
+            
+            if action == 'remove':
+                self.data['npcs'][target]['hit_points'] -= hp
+
+            return False
+
+        if command == 'add npc':
+            obj = NpcData()
+            
+            npcIndex = MonstersIndex().readAllIndex()
+            char = Prompt.ask("what type of NPC", choices=npcIndex)
+            amount = IntPrompt.ask("how many to add")
+
+            for n in range(amount):
+                obj.create(Faker().first_name(), char, self.combat_id)
+
+            self.data = combat_data(self.combat_id)

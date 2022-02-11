@@ -22,6 +22,7 @@ treelib = "*"
 nose2 = "*"
 playsound = "*"
 pypdf2 = "*"
+simple-term-menu = "*"
 
 [scripts]
 test = "python -m nose2"
