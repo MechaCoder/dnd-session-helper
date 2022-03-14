@@ -60,6 +60,7 @@ def modifiers(score):
 
 
 def combat_data(combat_id):
+
     combat_data = CombatData().readById(combat_id)
     screen_data = Screen().readByHex(combat_data['screen.hex'])
     npcs_data = NpcData().readByHex(combat_id=combat_id)
@@ -119,26 +120,29 @@ class CombatDisplay():
     def run(self):
         """runs the combat."""
 
-        run_obj = True
         con = Console()
-        while run_obj:
-            for each in self.data['order']:
+        while True: # runs the combat loop, loops on round
 
-                if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
-                    continue
+            for each in self.data['order']: #goes though the i order 
 
-                clear()
-                con.print(
-                    self.renderable(each[0])
-                )
-                x = Prompt.ask('::>>', choices=['','exit', 'hp', 'add npc'])
-                if x == '':
-                    continue
+                while True:
 
-                if x == 'exit':
-                    exit()
+                    if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
+                        continue
 
-                self.combatCommands(x)
+                    clear()
+                    con.print(
+                        self.renderable(each[0])
+                    )
+                    x = Prompt.ask('::>>', choices=['','exit', 'hp', 'add npc'])
+                    if x == '':
+                        break
+
+                    if x == 'exit':
+                        exit()
+
+                    self.combatCommands(x)
+
 
     def renderable(self, name:str):
 
@@ -162,7 +166,7 @@ class CombatDisplay():
     def _screenOrderOfPlay(self, name:str):
 
         tbl = Table(
-            'name', 'initiative', 'type', 'turn',
+            'name', 'init', 'hp', 'type', 'turn',
             title='Play Order',
             show_lines=True
         )
@@ -176,11 +180,16 @@ class CombatDisplay():
             if each[2] == 'pc':
                 type = 'player'
             
+            
+            hp = ''
+            if each[2] == 'npc':
+                hp = str(self.data['npcs'][each[0]]['hit_points'])
+            
             styleStr = ''
             if each[2] == 'npc' and self.data['npcs'][each[0]]['hit_points'] <= 0:
                 styleStr = 'red'
 
-            tbl.add_row(each[0], str(each[1]), type, turn, style=styleStr)
+            tbl.add_row(each[0], str(each[1]), hp, type, turn, style=styleStr)
 
         return tbl
 
@@ -281,6 +290,9 @@ class CombatDisplay():
             if action == 'remove':
                 self.data['npcs'][target]['hit_points'] -= hp
 
+            if self.data['npcs'][target]['hit_points'] < 1:
+                self.data['order']
+
             return False
 
         if command == 'add npc':
@@ -291,6 +303,20 @@ class CombatDisplay():
             amount = IntPrompt.ask("how many to add")
 
             for n in range(amount):
-                obj.create(Faker().first_name(), char, self.combat_id)
+                name = Faker().first_name()
+                obj.create(name, char, self.combat_id)
+                p = getProfile(char)
 
-            self.data = combat_data(self.combat_id)
+                self.data['npcs'][name] = p
+                self.data['npcs'][name]['initiative'] = (roller('1D20')['sum'] + p['dexterity'])
+                self.data['npcs'][name]['combat_type'] = 'npc'
+
+                self.data['order'].append(
+                    (name, self.data['npcs'][name]['initiative'], 'npc')
+                )
+
+            self.data['order'].sort(key=lambda t:t[1])
+            self.data['order'].reverse()
+            
+
+            
